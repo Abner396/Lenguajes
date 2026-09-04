@@ -62,7 +62,7 @@ public class Analizador {
 
                 reconocerComentario();
 
-            } else if (Caracter_actual == '{' || Caracter_actual == '}' || Caracter_actual == '(' || Caracter_actual == ')' || Caracter_actual == ',') {
+            } else if (Caracter_actual == '{' || Caracter_actual == '}' || Caracter_actual == '(' || Caracter_actual == ')' || Caracter_actual == ',' || Caracter_actual == ';') {
 
                 reconocerDelimitador();
 
@@ -107,8 +107,7 @@ public class Analizador {
         String lexema = "";
 
         
-        while (!lector.finArchivo()
-                && esDigito(lector.getCaracter_actual())) {
+        while (!lector.finArchivo() && esDigito(lector.getCaracter_actual())) {
 
             lexema += lector.getCaracter_actual();
 
@@ -116,16 +115,14 @@ public class Analizador {
         }
 
         // comprobando si tienr parte decimal
-        if (!lector.finArchivo()
-                && lector.getCaracter_actual() == '.') {
+        if (!lector.finArchivo() && lector.getCaracter_actual() == '.') {
 
             lexema += lector.getCaracter_actual();
 
             lector.avanzar();
 
             // parte decimal
-            while (!lector.finArchivo()
-                    && esDigito(lector.getCaracter_actual())) {
+            while (!lector.finArchivo() && esDigito(lector.getCaracter_actual())) {
 
                 lexema += lector.getCaracter_actual();
 
@@ -181,7 +178,7 @@ public class Analizador {
             }
                 //saltando de linea
             if (Caracter_actual == '\n') {
-
+                    
                 break;
             }
 
@@ -473,6 +470,7 @@ public class Analizador {
             case "TRADUCIR":
             case "CLASIFICAR":
             case "EXTRAER":
+            case "CODIFICAR":
 
                 return Tipo.COMANDO_IA;
 
@@ -481,6 +479,7 @@ public class Analizador {
             case "DESDE":
             case "EN":
             case "COMO":
+            
 
                 return Tipo.CONECTOR;
 
