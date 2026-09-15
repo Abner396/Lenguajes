@@ -1,11 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang='es'>
 <head>
 <meta charset='UTF-8'>
-<title>Reporte de Errores</title>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Reporte de Errores Léxicos</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    margin: 40px;
+}
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    margin-top: 25px;
+}
+th {
+    background-color: #922b21;
+    color: white;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+.lexema {
+    text-align: left;
+    font-family: monospace;
+}
+.directiva-error {
+    background-color: #f5b7b1;
+    color: #7b241c;
+}
+.decimal-error {
+    background-color: #f8c471;
+    color: #784212;
+}
+.guion-error {
+    background-color: #d2b4de;
+    color: #512e5f;
+}
+.caracter-error {
+    background-color: #d7bde2;
+    color: #4a235a;
+}
+.cadena-error {
+    background-color: #aed6f1;
+    color: #154360;
+}
+.comentario-error {
+    background-color: #a9dfbf;
+    color: #145a32;
+}
+.sin-errores {
+    width: 80%;
+    margin: 30px auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #d5f5e3;
+    color: #196f3d;
+    border: 1px solid #82e0aa;
+    border-radius: 5px;
+}
+</style>
 </head>
 <body>
 <h1>Reporte de Errores Léxicos</h1>
-<h2>No se encontraron errores léxicos.</h2>
+<table>
+<tr>
+<th>Lexema</th>
+<th>Descripción</th>
+<th>Fila</th>
+<th>Columna</th>
+</tr>
+<tr class='directiva-error'>
+<td class='lexema'>@directiva_invalida</td>
+<td>Directiva no reconocida</td>
+<td>66</td>
+<td>1</td>
+</tr>
+<tr class='decimal-error'>
+<td class='lexema'>25.</td>
+<td>Numero decimal incompleto</td>
+<td>68</td>
+<td>1</td>
+</tr>
+<tr class='directiva-error'>
+<td class='lexema'>@</td>
+<td>Directiva no reconocida</td>
+<td>70</td>
+<td>1</td>
+</tr>
+<tr class='guion-error'>
+<td class='lexema'>-</td>
+<td>Caracter &#39;-&#39; no reconocido</td>
+<td>71</td>
+<td>1</td>
+</tr>
+<tr class='caracter-error'>
+<td class='lexema'>$</td>
+<td>Caracter no reconocido</td>
+<td>72</td>
+<td>1</td>
+</tr>
+<tr class='cadena-error'>
+<td class='lexema'>&quot;Cadena sin cerrar</td>
+<td>Cadena sin cerrar</td>
+<td>74</td>
+<td>1</td>
+</tr>
+<tr class='comentario-error'>
+<td class='lexema'>/* Comentario sin cerrar
+</td>
+<td>Comentario de bloque sin cerrar</td>
+<td>76</td>
+<td>1</td>
+</tr>
+</table>
 </body>
 </html>

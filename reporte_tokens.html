@@ -1,12 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang='es'>
 <head>
 <meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <title>Reporte de Tokens</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    margin: 40px;
+}
+h1 {
+    text-align: center;
+    color: #2c3e50;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    margin-top: 25px;
+}
+th {
+    background-color: #2c3e50;
+    color: white;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+.lexema {
+    text-align: left;
+    font-family: monospace;
+    font-weight: bold;
+}
+.directiva {
+    background-color: #aed6f1;
+    color: #154360;
+}
+.reservada {
+    background-color: #d2b4de;
+    color: #512e5f;
+}
+.comando {
+    background-color: #a9dfbf;
+    color: #145a32;
+}
+.conector {
+    background-color: #f8c471;
+    color: #784212;
+}
+.identificador {
+    background-color: #d5dbdb;
+    color: #34495e;
+}
+.cadena {
+    background-color: #a9cce3;
+    color: #1b4f72;
+}
+.entero {
+    background-color: #f9e79f;
+    color: #7d6608;
+}
+.decimal {
+    background-color: #a3e4d7;
+    color: #117864;
+}
+.asignacion {
+    background-color: #f5b7b1;
+    color: #7b241c;
+}
+.concatenacion {
+    background-color: #d7bde2;
+    color: #4a235a;
+}
+.delimitador {
+    background-color: #edbb99;
+    color: #6e2c00;
+}
+.funcion {
+    background-color: #76d7c4;
+    color: #0b5345;
+}
+</style>
 </head>
 <body>
 <h1>Reporte de Tokens</h1>
-<table border='1'>
+<table>
 <tr>
 <th>No.</th>
 <th>Lexema</th>
@@ -14,341 +96,614 @@
 <th>Fila</th>
 <th>Columna</th>
 </tr>
-<tr>
+<tr class='directiva'>
 <td>1</td>
-<td>@modelo</td>
+<td class='lexema'>@modelo</td>
 <td>DIRECTIVA</td>
-<td>1</td>
+<td>3</td>
 <td>1</td>
 </tr>
-<tr>
+<tr class='asignacion'>
 <td>2</td>
-<td>"claude-sonnet-4-6"</td>
-<td>CADENA</td>
-<td>1</td>
+<td class='lexema'>=</td>
+<td>ASIGNACION</td>
+<td>3</td>
 <td>9</td>
 </tr>
-<tr>
+<tr class='cadena'>
 <td>3</td>
-<td>@rol</td>
-<td>DIRECTIVA</td>
-<td>2</td>
-<td>1</td>
+<td class='lexema'>&quot;Claude&quot;</td>
+<td>CADENA</td>
+<td>3</td>
+<td>11</td>
 </tr>
-<tr>
+<tr class='directiva'>
 <td>4</td>
-<td>"ingeniero de datos"</td>
-<td>CADENA</td>
-<td>2</td>
-<td>6</td>
-</tr>
-<tr>
-<td>5</td>
-<td>@formato</td>
+<td class='lexema'>@rol</td>
 <td>DIRECTIVA</td>
-<td>3</td>
+<td>4</td>
 <td>1</td>
 </tr>
-<tr>
+<tr class='asignacion'>
+<td>5</td>
+<td class='lexema'>=</td>
+<td>ASIGNACION</td>
+<td>4</td>
 <td>6</td>
-<td>"markdown"</td>
-<td>CADENA</td>
-<td>3</td>
-<td>10</td>
 </tr>
-<tr>
+<tr class='cadena'>
+<td>6</td>
+<td class='lexema'>&quot;Asistente&quot;</td>
+<td>CADENA</td>
+<td>4</td>
+<td>8</td>
+</tr>
+<tr class='directiva'>
 <td>7</td>
-<td>AGENTE</td>
-<td>PALABRA_RESERVADA</td>
-<td>8</td>
+<td class='lexema'>@formato</td>
+<td>DIRECTIVA</td>
+<td>5</td>
 <td>1</td>
 </tr>
-<tr>
+<tr class='asignacion'>
 <td>8</td>
-<td>procesador</td>
-<td>IDENTIFICADOR</td>
-<td>8</td>
-<td>8</td>
-</tr>
-<tr>
-<td>9</td>
-<td>{</td>
-<td>DELIMITADOR</td>
-<td>8</td>
-<td>19</td>
-</tr>
-<tr>
-<td>10</td>
-<td>contexto</td>
-<td>PALABRA_RESERVADA</td>
-<td>9</td>
-<td>3</td>
-</tr>
-<tr>
-<td>11</td>
-<td>=</td>
+<td class='lexema'>=</td>
 <td>ASIGNACION</td>
-<td>9</td>
-<td>12</td>
+<td>5</td>
+<td>10</td>
 </tr>
-<tr>
-<td>12</td>
-<td>"Eres un ingeniero de datos experto? en formatos"</td>
+<tr class='cadena'>
+<td>9</td>
+<td class='lexema'>&quot;Texto&quot;</td>
 <td>CADENA</td>
-<td>9</td>
-<td>14</td>
+<td>5</td>
+<td>12</td>
 </tr>
-<tr>
-<td>13</td>
-<td>;</td>
-<td>DELIMITADOR</td>
-<td>9</td>
-<td>63</td>
-</tr>
-<tr>
-<td>14</td>
-<td>variable</td>
+<tr class='reservada'>
+<td>10</td>
+<td class='lexema'>AGENTE</td>
 <td>PALABRA_RESERVADA</td>
-<td>11</td>
-<td>3</td>
+<td>7</td>
+<td>1</td>
 </tr>
-<tr>
+<tr class='identificador'>
+<td>11</td>
+<td class='lexema'>principal</td>
+<td>IDENTIFICADOR</td>
+<td>7</td>
+<td>8</td>
+</tr>
+<tr class='delimitador'>
+<td>12</td>
+<td class='lexema'>{</td>
+<td>DELIMITADOR</td>
+<td>7</td>
+<td>18</td>
+</tr>
+<tr class='reservada'>
+<td>13</td>
+<td class='lexema'>contexto</td>
+<td>PALABRA_RESERVADA</td>
+<td>8</td>
+<td>5</td>
+</tr>
+<tr class='asignacion'>
+<td>14</td>
+<td class='lexema'>=</td>
+<td>ASIGNACION</td>
+<td>8</td>
+<td>14</td>
+</tr>
+<tr class='cadena'>
 <td>15</td>
-<td>datos</td>
+<td class='lexema'>&quot;Este es un contexto de prueba&quot;</td>
+<td>CADENA</td>
+<td>8</td>
+<td>16</td>
+</tr>
+<tr class='reservada'>
+<td>16</td>
+<td class='lexema'>variable</td>
+<td>PALABRA_RESERVADA</td>
+<td>9</td>
+<td>5</td>
+</tr>
+<tr class='identificador'>
+<td>17</td>
+<td class='lexema'>nombre</td>
+<td>IDENTIFICADOR</td>
+<td>9</td>
+<td>14</td>
+</tr>
+<tr class='asignacion'>
+<td>18</td>
+<td class='lexema'>=</td>
+<td>ASIGNACION</td>
+<td>9</td>
+<td>21</td>
+</tr>
+<tr class='cadena'>
+<td>19</td>
+<td class='lexema'>&quot;Abner&quot;</td>
+<td>CADENA</td>
+<td>9</td>
+<td>23</td>
+</tr>
+<tr class='reservada'>
+<td>20</td>
+<td class='lexema'>variable</td>
+<td>PALABRA_RESERVADA</td>
+<td>10</td>
+<td>5</td>
+</tr>
+<tr class='identificador'>
+<td>21</td>
+<td class='lexema'>edad</td>
+<td>IDENTIFICADOR</td>
+<td>10</td>
+<td>14</td>
+</tr>
+<tr class='asignacion'>
+<td>22</td>
+<td class='lexema'>=</td>
+<td>ASIGNACION</td>
+<td>10</td>
+<td>19</td>
+</tr>
+<tr class='entero'>
+<td>23</td>
+<td class='lexema'>25</td>
+<td>ENTERO</td>
+<td>10</td>
+<td>21</td>
+</tr>
+<tr class='reservada'>
+<td>24</td>
+<td class='lexema'>variable</td>
+<td>PALABRA_RESERVADA</td>
+<td>11</td>
+<td>5</td>
+</tr>
+<tr class='identificador'>
+<td>25</td>
+<td class='lexema'>altura</td>
 <td>IDENTIFICADOR</td>
 <td>11</td>
-<td>12</td>
+<td>14</td>
 </tr>
-<tr>
-<td>16</td>
-<td>=</td>
+<tr class='asignacion'>
+<td>26</td>
+<td class='lexema'>=</td>
 <td>ASIGNACION</td>
 <td>11</td>
-<td>18</td>
-</tr>
-<tr>
-<td>17</td>
-<td>CARGAR</td>
-<td>FUNCION</td>
-<td>11</td>
-<td>20</td>
-</tr>
-<tr>
-<td>18</td>
-<td>(</td>
-<td>DELIMITADOR</td>
-<td>11</td>
-<td>26</td>
-</tr>
-<tr>
-<td>19</td>
-<td>"clientes.json"</td>
-<td>CADENA</td>
-<td>11</td>
-<td>27</td>
-</tr>
-<tr>
-<td>20</td>
-<td>)</td>
-<td>DELIMITADOR</td>
-<td>11</td>
-<td>42</td>
-</tr>
-<tr>
 <td>21</td>
-<td>CODIFICAR</td>
-<td>COMANDO_IA</td>
-<td>13</td>
-<td>3</td>
 </tr>
-<tr>
-<td>22</td>
-<td>datos</td>
-<td>IDENTIFICADOR</td>
-<td>13</td>
-<td>13</td>
-</tr>
-<tr>
+<tr class='decimal'>
+<td>27</td>
+<td class='lexema'>1.75</td>
+<td>DECIMAL</td>
+<td>11</td>
 <td>23</td>
-<td>EN</td>
-<td>CONECTOR</td>
-<td>13</td>
-<td>19</td>
 </tr>
-<tr>
-<td>24</td>
-<td>"base64"</td>
-<td>CADENA</td>
-<td>13</td>
-<td>22</td>
-</tr>
-<tr>
-<td>25</td>
-<td>-></td>
-<td>CONECTOR</td>
-<td>13</td>
-<td>31</td>
-</tr>
-<tr>
-<td>26</td>
-<td>datos_codificados</td>
-<td>IDENTIFICADOR</td>
-<td>13</td>
-<td>34</td>
-</tr>
-<tr>
-<td>27</td>
-<td>CODIFICAR</td>
-<td>COMANDO_IA</td>
-<td>14</td>
-<td>3</td>
-</tr>
-<tr>
+<tr class='comando'>
 <td>28</td>
-<td>datos</td>
-<td>IDENTIFICADOR</td>
+<td class='lexema'>PREGUNTAR</td>
+<td>COMANDO_IA</td>
+<td>13</td>
+<td>5</td>
+</tr>
+<tr class='cadena'>
+<td>29</td>
+<td class='lexema'>&quot;¿Como estas?&quot;</td>
+<td>CADENA</td>
+<td>13</td>
+<td>15</td>
+</tr>
+<tr class='comando'>
+<td>30</td>
+<td class='lexema'>GENERAR</td>
+<td>COMANDO_IA</td>
+<td>14</td>
+<td>5</td>
+</tr>
+<tr class='cadena'>
+<td>31</td>
+<td class='lexema'>&quot;Un ejemplo de texto&quot;</td>
+<td>CADENA</td>
 <td>14</td>
 <td>13</td>
 </tr>
-<tr>
-<td>29</td>
-<td>COMO</td>
-<td>CONECTOR</td>
-<td>14</td>
-<td>19</td>
-</tr>
-<tr>
-<td>30</td>
-<td>"xml"</td>
-<td>CADENA</td>
-<td>14</td>
-<td>24</td>
-</tr>
-<tr>
-<td>31</td>
-<td>-></td>
-<td>CONECTOR</td>
-<td>14</td>
-<td>30</td>
-</tr>
-<tr>
+<tr class='comando'>
 <td>32</td>
-<td>datos_xml</td>
-<td>IDENTIFICADOR</td>
-<td>14</td>
-<td>33</td>
+<td class='lexema'>RESUMIR</td>
+<td>COMANDO_IA</td>
+<td>15</td>
+<td>5</td>
 </tr>
-<tr>
+<tr class='cadena'>
 <td>33</td>
-<td>RESUMIR</td>
+<td class='lexema'>&quot;Este texto debe ser resumido&quot;</td>
+<td>CADENA</td>
+<td>15</td>
+<td>13</td>
+</tr>
+<tr class='comando'>
+<td>34</td>
+<td class='lexema'>ANALIZAR</td>
 <td>COMANDO_IA</td>
 <td>16</td>
-<td>3</td>
+<td>5</td>
 </tr>
-<tr>
-<td>34</td>
-<td>datos_xml</td>
-<td>IDENTIFICADOR</td>
+<tr class='cadena'>
+<td>35</td>
+<td class='lexema'>&quot;Analiza esta informacion&quot;</td>
+<td>CADENA</td>
 <td>16</td>
+<td>14</td>
+</tr>
+<tr class='comando'>
+<td>36</td>
+<td class='lexema'>TRADUCIR</td>
+<td>COMANDO_IA</td>
+<td>17</td>
+<td>5</td>
+</tr>
+<tr class='cadena'>
+<td>37</td>
+<td class='lexema'>&quot;Hello world&quot;</td>
+<td>CADENA</td>
+<td>17</td>
+<td>14</td>
+</tr>
+<tr class='comando'>
+<td>38</td>
+<td class='lexema'>CLASIFICAR</td>
+<td>COMANDO_IA</td>
+<td>18</td>
+<td>5</td>
+</tr>
+<tr class='cadena'>
+<td>39</td>
+<td class='lexema'>&quot;Clasifica este texto&quot;</td>
+<td>CADENA</td>
+<td>18</td>
+<td>16</td>
+</tr>
+<tr class='comando'>
+<td>40</td>
+<td class='lexema'>EXTRAER</td>
+<td>COMANDO_IA</td>
+<td>19</td>
+<td>5</td>
+</tr>
+<tr class='cadena'>
+<td>41</td>
+<td class='lexema'>&quot;Extrae los datos&quot;</td>
+<td>CADENA</td>
+<td>19</td>
+<td>13</td>
+</tr>
+<tr class='comando'>
+<td>42</td>
+<td class='lexema'>CODIFICAR</td>
+<td>COMANDO_IA</td>
+<td>20</td>
+<td>5</td>
+</tr>
+<tr class='cadena'>
+<td>43</td>
+<td class='lexema'>&quot;Convierte este contenido&quot;</td>
+<td>CADENA</td>
+<td>20</td>
+<td>15</td>
+</tr>
+<tr class='identificador'>
+<td>44</td>
+<td class='lexema'>resultado</td>
+<td>IDENTIFICADOR</td>
+<td>22</td>
+<td>5</td>
+</tr>
+<tr class='asignacion'>
+<td>45</td>
+<td class='lexema'>=</td>
+<td>ASIGNACION</td>
+<td>22</td>
+<td>15</td>
+</tr>
+<tr class='identificador'>
+<td>46</td>
+<td class='lexema'>nombre</td>
+<td>IDENTIFICADOR</td>
+<td>22</td>
+<td>17</td>
+</tr>
+<tr class='concatenacion'>
+<td>47</td>
+<td class='lexema'>+</td>
+<td>CONCATENACION</td>
+<td>22</td>
+<td>24</td>
+</tr>
+<tr class='cadena'>
+<td>48</td>
+<td class='lexema'>&quot; Sánchez&quot;</td>
+<td>CADENA</td>
+<td>22</td>
+<td>26</td>
+</tr>
+<tr class='funcion'>
+<td>49</td>
+<td class='lexema'>CARGAR</td>
+<td>FUNCION</td>
+<td>24</td>
+<td>5</td>
+</tr>
+<tr class='delimitador'>
+<td>50</td>
+<td class='lexema'>(</td>
+<td>DELIMITADOR</td>
+<td>24</td>
 <td>11</td>
 </tr>
-<tr>
-<td>35</td>
-<td>EN</td>
+<tr class='cadena'>
+<td>51</td>
+<td class='lexema'>&quot;archivo.txt&quot;</td>
+<td>CADENA</td>
+<td>24</td>
+<td>12</td>
+</tr>
+<tr class='delimitador'>
+<td>52</td>
+<td class='lexema'>)</td>
+<td>DELIMITADOR</td>
+<td>24</td>
+<td>25</td>
+</tr>
+<tr class='identificador'>
+<td>53</td>
+<td class='lexema'>Guatemala</td>
+<td>IDENTIFICADOR</td>
+<td>26</td>
+<td>5</td>
+</tr>
+<tr class='conector'>
+<td>54</td>
+<td class='lexema'>SOBRE</td>
 <td>CONECTOR</td>
-<td>16</td>
+<td>26</td>
+<td>15</td>
+</tr>
+<tr class='identificador'>
+<td>55</td>
+<td class='lexema'>Quetzaltenango</td>
+<td>IDENTIFICADOR</td>
+<td>26</td>
 <td>21</td>
 </tr>
-<tr>
-<td>36</td>
-<td>60</td>
-<td>ENTERO</td>
-<td>16</td>
-<td>24</td>
-</tr>
-<tr>
-<td>37</td>
-<td>palabras</td>
+<tr class='identificador'>
+<td>56</td>
+<td class='lexema'>archivo</td>
 <td>IDENTIFICADOR</td>
-<td>16</td>
 <td>27</td>
+<td>5</td>
 </tr>
-<tr>
-<td>38</td>
-<td>-></td>
+<tr class='conector'>
+<td>57</td>
+<td class='lexema'>DESDE</td>
 <td>CONECTOR</td>
-<td>16</td>
-<td>36</td>
-</tr>
-<tr>
-<td>39</td>
-<td>resumen</td>
-<td>IDENTIFICADOR</td>
-<td>16</td>
-<td>39</td>
-</tr>
-<tr>
-<td>40</td>
-<td>}</td>
-<td>DELIMITADOR</td>
-<td>17</td>
-<td>1</td>
-</tr>
-<tr>
-<td>41</td>
-<td>EJECUTAR</td>
-<td>PALABRA_RESERVADA</td>
-<td>19</td>
-<td>1</td>
-</tr>
-<tr>
-<td>42</td>
-<td>procesador</td>
-<td>IDENTIFICADOR</td>
-<td>19</td>
-<td>10</td>
-</tr>
-<tr>
-<td>43</td>
-<td>EXPORTAR</td>
-<td>PALABRA_RESERVADA</td>
-<td>20</td>
-<td>1</td>
-</tr>
-<tr>
-<td>44</td>
-<td>datos_codificados</td>
-<td>IDENTIFICADOR</td>
-<td>20</td>
-<td>10</td>
-</tr>
-<tr>
-<td>45</td>
-<td>,</td>
-<td>DELIMITADOR</td>
-<td>20</td>
 <td>27</td>
+<td>13</td>
 </tr>
-<tr>
-<td>46</td>
-<td>datos_xml</td>
+<tr class='identificador'>
+<td>58</td>
+<td class='lexema'>servidor</td>
 <td>IDENTIFICADOR</td>
-<td>20</td>
+<td>27</td>
+<td>19</td>
+</tr>
+<tr class='identificador'>
+<td>59</td>
+<td class='lexema'>resultado</td>
+<td>IDENTIFICADOR</td>
+<td>28</td>
+<td>5</td>
+</tr>
+<tr class='conector'>
+<td>60</td>
+<td class='lexema'>EN</td>
+<td>CONECTOR</td>
+<td>28</td>
+<td>15</td>
+</tr>
+<tr class='identificador'>
+<td>61</td>
+<td class='lexema'>formato</td>
+<td>IDENTIFICADOR</td>
+<td>28</td>
+<td>18</td>
+</tr>
+<tr class='identificador'>
+<td>62</td>
+<td class='lexema'>texto</td>
+<td>IDENTIFICADOR</td>
 <td>29</td>
+<td>5</td>
 </tr>
-<tr>
-<td>47</td>
-<td>,</td>
-<td>DELIMITADOR</td>
-<td>20</td>
-<td>38</td>
+<tr class='conector'>
+<td>63</td>
+<td class='lexema'>COMO</td>
+<td>CONECTOR</td>
+<td>29</td>
+<td>11</td>
 </tr>
-<tr>
-<td>48</td>
-<td>resumen</td>
+<tr class='identificador'>
+<td>64</td>
+<td class='lexema'>entrada</td>
 <td>IDENTIFICADOR</td>
-<td>20</td>
-<td>40</td>
+<td>29</td>
+<td>16</td>
+</tr>
+<tr class='identificador'>
+<td>65</td>
+<td class='lexema'>Guatemala</td>
+<td>IDENTIFICADOR</td>
+<td>31</td>
+<td>5</td>
+</tr>
+<tr class='conector'>
+<td>66</td>
+<td class='lexema'>-&gt;</td>
+<td>CONECTOR</td>
+<td>31</td>
+<td>15</td>
+</tr>
+<tr class='identificador'>
+<td>67</td>
+<td class='lexema'>Antigua</td>
+<td>IDENTIFICADOR</td>
+<td>31</td>
+<td>18</td>
+</tr>
+<tr class='delimitador'>
+<td>68</td>
+<td class='lexema'>}</td>
+<td>DELIMITADOR</td>
+<td>32</td>
+<td>1</td>
+</tr>
+<tr class='directiva'>
+<td>69</td>
+<td class='lexema'>@modelo</td>
+<td>DIRECTIVA</td>
+<td>41</td>
+<td>1</td>
+</tr>
+<tr class='identificador'>
+<td>70</td>
+<td class='lexema'>AGENTE_prueba123</td>
+<td>IDENTIFICADOR</td>
+<td>42</td>
+<td>1</td>
+</tr>
+<tr class='identificador'>
+<td>71</td>
+<td class='lexema'>_variable1</td>
+<td>IDENTIFICADOR</td>
+<td>43</td>
+<td>1</td>
+</tr>
+<tr class='entero'>
+<td>72</td>
+<td class='lexema'>123</td>
+<td>ENTERO</td>
+<td>44</td>
+<td>1</td>
+</tr>
+<tr class='entero'>
+<td>73</td>
+<td class='lexema'>4567</td>
+<td>ENTERO</td>
+<td>45</td>
+<td>1</td>
+</tr>
+<tr class='decimal'>
+<td>74</td>
+<td class='lexema'>25.50</td>
+<td>DECIMAL</td>
+<td>46</td>
+<td>1</td>
+</tr>
+<tr class='decimal'>
+<td>75</td>
+<td class='lexema'>3.14</td>
+<td>DECIMAL</td>
+<td>47</td>
+<td>1</td>
+</tr>
+<tr class='decimal'>
+<td>76</td>
+<td class='lexema'>0.5</td>
+<td>DECIMAL</td>
+<td>48</td>
+<td>1</td>
+</tr>
+<tr class='cadena'>
+<td>77</td>
+<td class='lexema'>&quot;Cadena normal&quot;</td>
+<td>CADENA</td>
+<td>50</td>
+<td>1</td>
+</tr>
+<tr class='cadena'>
+<td>78</td>
+<td class='lexema'>&quot;Cadena con espacios&quot;</td>
+<td>CADENA</td>
+<td>51</td>
+<td>1</td>
+</tr>
+<tr class='cadena'>
+<td>79</td>
+<td class='lexema'>&quot;&quot;</td>
+<td>CADENA</td>
+<td>52</td>
+<td>1</td>
+</tr>
+<tr class='delimitador'>
+<td>80</td>
+<td class='lexema'>{</td>
+<td>DELIMITADOR</td>
+<td>54</td>
+<td>1</td>
+</tr>
+<tr class='delimitador'>
+<td>81</td>
+<td class='lexema'>}</td>
+<td>DELIMITADOR</td>
+<td>55</td>
+<td>1</td>
+</tr>
+<tr class='delimitador'>
+<td>82</td>
+<td class='lexema'>(</td>
+<td>DELIMITADOR</td>
+<td>56</td>
+<td>1</td>
+</tr>
+<tr class='delimitador'>
+<td>83</td>
+<td class='lexema'>)</td>
+<td>DELIMITADOR</td>
+<td>57</td>
+<td>1</td>
+</tr>
+<tr class='delimitador'>
+<td>84</td>
+<td class='lexema'>,</td>
+<td>DELIMITADOR</td>
+<td>58</td>
+<td>1</td>
+</tr>
+<tr class='asignacion'>
+<td>85</td>
+<td class='lexema'>=</td>
+<td>ASIGNACION</td>
+<td>60</td>
+<td>1</td>
+</tr>
+<tr class='concatenacion'>
+<td>86</td>
+<td class='lexema'>+</td>
+<td>CONCATENACION</td>
+<td>61</td>
+<td>1</td>
+</tr>
+<tr class='conector'>
+<td>87</td>
+<td class='lexema'>-&gt;</td>
+<td>CONECTOR</td>
+<td>63</td>
+<td>1</td>
 </tr>
 </table>
 </body>

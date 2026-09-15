@@ -101,54 +101,56 @@ public class Analizador {
 
     private void reconocerNumero() throws IOException {
 
-        int fila_inicial = lector.getFila();
-        int columna_inicial = lector.getColumna();
+    int fila_inicial = lector.getFila();
+    int columna_inicial = lector.getColumna();
+    String lexema = "";
 
-        String lexema = "";
+    // Parte entera
+    while (!lector.finArchivo() && esDigito(lector.getCaracter_actual())) {
 
-        
-        while (!lector.finArchivo() && esDigito(lector.getCaracter_actual())) {
+        lexema += lector.getCaracter_actual();
+        lector.avanzar();
+    }
 
-            lexema += lector.getCaracter_actual();
-
-            lector.avanzar();
-        }
-
-        // comprobando si tienr parte decimal
+        // Comprobamos si existe punto decimal
         if (!lector.finArchivo() && lector.getCaracter_actual() == '.') {
 
-            lexema += lector.getCaracter_actual();
+        lexema += lector.getCaracter_actual();
+        lector.avanzar();
 
-            lector.avanzar();
+        // Debe existir al menos un dígito después del punto
+        if (!lector.finArchivo() && esDigito(lector.getCaracter_actual())) {
 
-            // parte decimal
             while (!lector.finArchivo() && esDigito(lector.getCaracter_actual())) {
 
                 lexema += lector.getCaracter_actual();
-
                 lector.avanzar();
             }
 
             Token token = new Token(numero_token, lexema, Tipo.DECIMAL, fila_inicial, columna_inicial);
 
             tokens.add(token);
-
             numero_token++;
 
             System.out.println(token);
 
         } else {
 
-            Token token = new Token(numero_token, lexema, Tipo.ENTERO, fila_inicial, columna_inicial);
+            Error error = new Error(lexema, "Numero decimal incompleto", fila_inicial, columna_inicial);
 
-            tokens.add(token);
+            errores.add(error);
+            System.out.println(error);
+        }
 
-            numero_token++;
+        } else {
 
-            System.out.println(token);
+        Token token = new Token( numero_token, lexema, Tipo.ENTERO, fila_inicial, columna_inicial);
+
+        tokens.add(token);
+        numero_token++;
+        System.out.println(token);
         }
     }
-
     private void reconocerCadena() throws IOException {
 
         int fila_inicial = lector.getFila();
@@ -304,11 +306,10 @@ public class Analizador {
 
         lector.avanzar();
 
-        while (!lector.finArchivo() && esLetra(lector.getCaracter_actual())) {
+         while (!lector.finArchivo() && esParteIdentificador(lector.getCaracter_actual())) {
 
-            lexema += lector.getCaracter_actual();
-
-            lector.avanzar();
+        lexema += lector.getCaracter_actual();
+        lector.avanzar();
         }
 
         if (lexema.equals("@modelo") || lexema.equals("@rol") || lexema.equals("@formato")) {
@@ -332,6 +333,7 @@ public class Analizador {
     }
 
       private void reconocerComentario() throws IOException {
+          String prueba = "/";
 
     int fila_inicial = lector.getFila();
     int columna_inicial = lector.getColumna();
@@ -372,21 +374,21 @@ public class Analizador {
 
            
             if (Caracter_actual == '*') {
-
+                lexema += Caracter_actual;
                 lector.avanzar();
 
                 if (!lector.finArchivo() && lector.getCaracter_actual() == '/') {
 
-                   
+                   lexema += lector.getCaracter_actual();
                     lector.avanzar();
 
-                        cerrado = true;
+                   cerrado = true;
 
                     break;
                 }
 
             } else {
-
+                lexema += Caracter_actual;
                 lector.avanzar();
             }
         }

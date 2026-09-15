@@ -55,7 +55,7 @@ public class Prueba {
             Analizador analizador = new Analizador(lector);
 
             
-            System.out.println("LEYEND EL ARCHIVO...");
+            System.out.println("LEYEND EL ARCHIVO");
             System.out.println();
 
             
