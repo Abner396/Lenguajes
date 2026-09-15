@@ -4,10 +4,14 @@
  */
 package GUI;
 
+import com.mycompany.prueba.Buscador;
+import java.io.IOException;
+import javax.swing.JOptionPane;
 /**
  *
  * @author abner
  */
+
 public class Principal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Principal.class.getName());
@@ -17,6 +21,8 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
+        this.setVisible(true);
+        this.setLocationRelativeTo(this);
         
     }
 
@@ -35,11 +41,14 @@ public class Principal extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
         JPtexto = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        JPEncabezado = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,7 +58,14 @@ public class Principal extends javax.swing.JFrame {
         jButton2.setText("Cargar Archivo");
         jButton2.addActionListener(this::jButton2ActionPerformed);
 
-        jButton3.setText("Salir");
+        jButton3.setText("AFD");
+        jButton3.addActionListener(this::jButton3ActionPerformed);
+
+        jButton5.setText("Gurdar");
+        jButton5.addActionListener(this::jButton5ActionPerformed);
+
+        jButton6.setText("Salir");
+        jButton6.addActionListener(this::jButton6ActionPerformed);
 
         javax.swing.GroupLayout JPbotonesLayout = new javax.swing.GroupLayout(JPbotones);
         JPbotones.setLayout(JPbotonesLayout);
@@ -57,29 +73,29 @@ public class Principal extends javax.swing.JFrame {
             JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JPbotonesLayout.createSequentialGroup()
                 .addGap(64, 64, 64)
-                .addGroup(JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(67, Short.MAX_VALUE))
-            .addGroup(JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(JPbotonesLayout.createSequentialGroup()
-                    .addGap(65, 65, 65)
+                .addGroup(JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(70, Short.MAX_VALUE)))
+                    .addGroup(JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
         JPbotonesLayout.setVerticalGroup(
             JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JPbotonesLayout.createSequentialGroup()
-                .addGap(104, 104, 104)
+                .addGap(69, 69, 69)
+                .addComponent(jButton2)
+                .addGap(18, 18, 18)
+                .addComponent(jButton5)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
+                .addGap(18, 18, 18)
+                .addComponent(jButton6)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(JPbotonesLayout.createSequentialGroup()
-                    .addGap(58, 58, 58)
-                    .addComponent(jButton2)
-                    .addContainerGap(256, Short.MAX_VALUE)))
         );
 
         JPtexto.setBackground(new java.awt.Color(255, 255, 255));
@@ -101,7 +117,7 @@ public class Principal extends javax.swing.JFrame {
         JPtexto.setLayout(JPtextoLayout);
         JPtextoLayout.setHorizontalGroup(
             JPtextoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPtextoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton4)
@@ -118,6 +134,19 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel1.setText("              Ingrese el texto para analizar");
 
+        JPEncabezado.setBackground(new java.awt.Color(0, 51, 255));
+
+        javax.swing.GroupLayout JPEncabezadoLayout = new javax.swing.GroupLayout(JPEncabezado);
+        JPEncabezado.setLayout(JPEncabezadoLayout);
+        JPEncabezadoLayout.setHorizontalGroup(
+            JPEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        JPEncabezadoLayout.setVerticalGroup(
+            JPEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 80, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout JPContenedorLayout = new javax.swing.GroupLayout(JPContenedor);
         JPContenedor.setLayout(JPContenedorLayout);
         JPContenedorLayout.setHorizontalGroup(
@@ -126,16 +155,18 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(JPbotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(JPtexto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(JPEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPContenedorLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60))
+                .addGap(90, 90, 90))
         );
         JPContenedorLayout.setVerticalGroup(
             JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPContenedorLayout.createSequentialGroup()
-                .addGap(0, 174, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(JPEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(JPtexto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -146,38 +177,107 @@ public class Principal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(JPContenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(JPContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 6, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(JPContenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(JPContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 6, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        guardarArchivo();
+        System.out.println("ARchivo guardado");
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        Buscador buscador = new Buscador();
+        String ruta = buscador.seleccionarArchivo();
+
+        if (ruta == null) {
+            return;
+        }
+
+        try {
+
+            String contenido = buscador.leerArchivo(ruta);
+            jTextArea1.setText(contenido);
+
+        } catch (IOException e) {
+
+            JOptionPane.showMessageDialog(this,"No se pudo abrir el archivo:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    //Métodos para los botones
+    private void guardarArchivo() {
+
+         Buscador buscador = new Buscador();
+        javax.swing.JFileChooser explorador = new javax.swing.JFileChooser();
+         javax.swing.filechooser.FileNameExtensionFilter filtro =new javax.swing.filechooser.FileNameExtensionFilter("Archivos PromptZal (*.pz)", "pz");
+         explorador.setFileFilter(filtro);
+
+        int opcion = explorador.showSaveDialog(this);
+
+        if (opcion != javax.swing.JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        java.io.File archivo = explorador.getSelectedFile();
+        String ruta = archivo.getAbsolutePath();
+
+        if (!ruta.toLowerCase().endsWith(".pz")) {
+        ruta += ".pz";
+        }
+
+        try {
+
+            buscador.guardarArchivo(ruta, jTextArea1.getText());
+
+            JOptionPane.showMessageDialog(
+                this,"Archivo guardado correctamente.", "Guardar", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (IOException e) {
+
+            JOptionPane.showMessageDialog(
+                this,"No se pudo guardar el archivo:\n" + e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel JPContenedor;
+    private javax.swing.JPanel JPEncabezado;
     private javax.swing.JPanel JPbotones;
     private javax.swing.JPanel JPtexto;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

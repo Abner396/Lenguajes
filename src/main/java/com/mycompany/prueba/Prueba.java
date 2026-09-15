@@ -1,5 +1,6 @@
 package com.mycompany.prueba;
 
+import GUI.Principal;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -9,6 +10,7 @@ public class Prueba {
 
     public static void main(String[] args) {
 
+        new Principal();
         menu();
     }
     
