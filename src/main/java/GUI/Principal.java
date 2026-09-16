@@ -4,25 +4,30 @@
  */
 package GUI;
 
+import com.mycompany.prueba.Analizador;
 import com.mycompany.prueba.Buscador;
+import com.mycompany.prueba.Lector;
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author abner
  */
 
+
+
 public class Principal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Principal.class.getName());
-
+    private Analizador analizador;
     /**
      * Creates new form Principal
      */
     public Principal() {
         initComponents();
         this.setVisible(true);
-        this.setLocationRelativeTo(this);
+        this.setLocationRelativeTo(null);
         
     }
 
@@ -44,11 +49,21 @@ public class Principal extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         JPtexto = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         JPEncabezado = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        JPTokens = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablaTokens = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        JPErrores = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tablaErrores = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,7 +76,7 @@ public class Principal extends javax.swing.JFrame {
         jButton3.setText("AFD");
         jButton3.addActionListener(this::jButton3ActionPerformed);
 
-        jButton5.setText("Gurdar");
+        jButton5.setText("Guardar");
         jButton5.addActionListener(this::jButton5ActionPerformed);
 
         jButton6.setText("Salir");
@@ -100,14 +115,6 @@ public class Principal extends javax.swing.JFrame {
 
         JPtexto.setBackground(new java.awt.Color(255, 255, 255));
 
-        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
-
-        jTextArea1.setBackground(new java.awt.Color(255, 255, 255));
-        jTextArea1.setColumns(20);
-        jTextArea1.setForeground(new java.awt.Color(0, 0, 0));
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
         jButton4.setBackground(new java.awt.Color(204, 204, 204));
         jButton4.setForeground(new java.awt.Color(0, 0, 0));
         jButton4.setText("Analizar");
@@ -117,19 +124,17 @@ public class Principal extends javax.swing.JFrame {
         JPtexto.setLayout(JPtextoLayout);
         JPtextoLayout.setHorizontalGroup(
             JPtextoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPtextoLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(247, Short.MAX_VALUE)
                 .addComponent(jButton4)
-                .addGap(163, 163, 163))
+                .addGap(230, 230, 230))
         );
         JPtextoLayout.setVerticalGroup(
             JPtextoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JPtextoLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPtextoLayout.createSequentialGroup()
+                .addContainerGap(8, Short.MAX_VALUE)
                 .addComponent(jButton4)
-                .addGap(0, 19, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jLabel1.setText("              Ingrese el texto para analizar");
@@ -147,30 +152,168 @@ public class Principal extends javax.swing.JFrame {
             .addGap(0, 80, Short.MAX_VALUE)
         );
 
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jTextArea1.setBackground(new java.awt.Color(255, 255, 255));
+        jTextArea1.setColumns(20);
+        jTextArea1.setForeground(new java.awt.Color(0, 0, 0));
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        JPTokens.setBackground(new java.awt.Color(0, 255, 255));
+
+        tablaTokens.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "No", "Lexema", "Tipo", "Fila", "Columna"
+            }
+        ));
+        jScrollPane3.setViewportView(tablaTokens);
+
+        jLabel2.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("TOKENS");
+
+        jLabel4.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("TOKENS");
+
+        javax.swing.GroupLayout JPTokensLayout = new javax.swing.GroupLayout(JPTokens);
+        JPTokens.setLayout(JPTokensLayout);
+        JPTokensLayout.setHorizontalGroup(
+            JPTokensLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPTokensLayout.createSequentialGroup()
+                .addGroup(JPTokensLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JPTokensLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(JPTokensLayout.createSequentialGroup()
+                        .addGap(195, 195, 195)
+                        .addComponent(jLabel2)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(JPTokensLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(JPTokensLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel4)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        JPTokensLayout.setVerticalGroup(
+            JPTokensLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPTokensLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(JPTokensLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(JPTokensLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel4)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+
+        JPErrores.setBackground(new java.awt.Color(0, 204, 102));
+
+        tablaErrores.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "No", "Lexema", "Descripción", "Fila", "Columna"
+            }
+        ));
+        jScrollPane4.setViewportView(tablaErrores);
+
+        jLabel3.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setText("TOKENS");
+
+        jLabel5.setFont(new java.awt.Font("Liberation Sans", 0, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("ERRORES");
+
+        javax.swing.GroupLayout JPErroresLayout = new javax.swing.GroupLayout(JPErrores);
+        JPErrores.setLayout(JPErroresLayout);
+        JPErroresLayout.setHorizontalGroup(
+            JPErroresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPErroresLayout.createSequentialGroup()
+                .addGroup(JPErroresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JPErroresLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(JPErroresLayout.createSequentialGroup()
+                        .addGap(195, 195, 195)
+                        .addComponent(jLabel5)))
+                .addContainerGap(8, Short.MAX_VALUE))
+            .addGroup(JPErroresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(JPErroresLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel3)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        JPErroresLayout.setVerticalGroup(
+            JPErroresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPErroresLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21))
+            .addGroup(JPErroresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(JPErroresLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel3)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+
         javax.swing.GroupLayout JPContenedorLayout = new javax.swing.GroupLayout(JPContenedor);
         JPContenedor.setLayout(JPContenedorLayout);
         JPContenedorLayout.setHorizontalGroup(
             JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(JPContenedorLayout.createSequentialGroup()
-                .addComponent(JPbotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JPtexto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(JPEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPContenedorLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(90, 90, 90))
+            .addGroup(JPContenedorLayout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addComponent(JPbotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JPContenedorLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(JPtexto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)))
+                    .addGroup(JPContenedorLayout.createSequentialGroup()
+                        .addGap(161, 161, 161)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(JPContenedorLayout.createSequentialGroup()
+                .addComponent(JPTokens, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(JPErrores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         JPContenedorLayout.setVerticalGroup(
             JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPContenedorLayout.createSequentialGroup()
                 .addComponent(JPEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JPContenedorLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JPtexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(JPbotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(JPtexto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(JPbotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(JPTokens, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(JPErrores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -179,20 +322,18 @@ public class Principal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(JPContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 6, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(JPContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 6, Short.MAX_VALUE))
+            .addComponent(JPContenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        analizarTexto();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -266,10 +407,54 @@ public class Principal extends javax.swing.JFrame {
                 this,"No se pudo guardar el archivo:\n" + e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void analizarTexto() {
+
+        String contenido = jTextArea1.getText();
+
+        if (contenido.trim().isEmpty()) {
+
+            JOptionPane.showMessageDialog(this,"No hay texto para analizar.","Analizar",JOptionPane.WARNING_MESSAGE);
+
+            return;
+        }
+
+        try {
+
+            Lector lector = new Lector(contenido, true);
+            analizador = new Analizador(lector);
+            analizador.analizar();
+            
+            mostrarTokens();
+
+            System.out.println("ANALISIS TERMINADO");
+            System.out.println("Tokens encontrados: " + analizador.getTokens().size());
+            System.out.println("Errores encontrados: " + analizador.getErrores().size());
+            lector.cerrar();
+
+        } catch (IOException ex) {
+
+            JOptionPane.showMessageDialog(this,"Ocurrió un error durante el análisis:\n" + ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void mostrarTokens() {
+
+    DefaultTableModel modelo = (DefaultTableModel) tablaTokens.getModel();
+
+    modelo.setRowCount(0);
+
+    for (com.mycompany.prueba.Token token : analizador.getTokens()) {
+
+        modelo.addRow(new Object[]{token.getNumero(),token.getLexema(),token.getTipo(),token.getFila(),token.getColumna()});
+    }
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel JPContenedor;
     private javax.swing.JPanel JPEncabezado;
+    private javax.swing.JPanel JPErrores;
+    private javax.swing.JPanel JPTokens;
     private javax.swing.JPanel JPbotones;
     private javax.swing.JPanel JPtexto;
     private javax.swing.JButton jButton1;
@@ -279,8 +464,16 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTable tablaErrores;
+    private javax.swing.JTable tablaTokens;
     // End of variables declaration//GEN-END:variables
 }

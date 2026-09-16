@@ -3,6 +3,7 @@ package com.mycompany.prueba;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 
 public class Lector {
     
@@ -10,6 +11,7 @@ public class Lector {
     private int caracter_actual;
     private int fila;
     private int columna;
+    
     
     public Lector(String ruta) throws IOException {
         archivo = new BufferedReader(new FileReader(ruta));
@@ -19,6 +21,21 @@ public class Lector {
 
         avanzar();
     }
+    
+    public Lector(String contenido, boolean desdeTexto) {
+
+        archivo = new BufferedReader(new StringReader(contenido));
+
+        fila = 1;
+        columna = 0;
+
+        try {
+            avanzar();
+        } catch (IOException e) {
+            
+        }
+    }
+    
 
     public void avanzar() throws IOException {
 
