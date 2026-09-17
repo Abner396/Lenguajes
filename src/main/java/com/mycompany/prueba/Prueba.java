@@ -71,6 +71,7 @@ public class Prueba {
 
             reporte.generarReporteTokens();
             reporte.generarReporteErrores();
+            reporte.generarReporteEstadisticas();
 
             System.out.println();
             

@@ -84,18 +84,14 @@ public class Analizador {
         while (!lector.finArchivo() && esParteIdentificador(lector.getCaracter_actual())) {
 
             lexema += lector.getCaracter_actual();
-
             lector.avanzar();
         }
 
         Tipo tipo = determinarTipo(lexema);
-
         Token token = new Token(numero_token, lexema, tipo, fila_inicial, columna_inicial);
-
         tokens.add(token);
 
         numero_token++;
-
         System.out.println(token);
     }
 
@@ -171,11 +167,8 @@ public class Analizador {
             if (Caracter_actual == '"') {
 
                 lexema += Caracter_actual;
-
                 lector.avanzar();
-
                 cerrada = true;
-
                 break;
             }
                 //saltando de linea
@@ -192,19 +185,14 @@ public class Analizador {
         if (cerrada) {
 
             Token token = new Token(numero_token, lexema, Tipo.CADENA, fila_inicial, columna_inicial);
-
             tokens.add(token);
-
             numero_token++;
-
             System.out.println(token);
 
           } else {
 
             Error error = new Error(lexema, "Cadena sin cerrar", fila_inicial, columna_inicial);
-
             errores.add(error);
-
             System.out.println(error);
 
             if (!lector.finArchivo() && lector.getCaracter_actual() == '\n') {
@@ -223,11 +211,8 @@ public class Analizador {
         String lexema = "";
 
         lexema += lector.getCaracter_actual();
-
         lector.avanzar();
-
         Token token = new Token( numero_token, lexema, Tipo.ASIGNACION, fila_inicial, columna_inicial);
-
         tokens.add(token);
 
         numero_token++;
@@ -244,11 +229,9 @@ public class Analizador {
          String lexema = "";
  
         lexema += lector.getCaracter_actual();
-
             lector.avanzar();
 
         Token token = new Token( numero_token, lexema, Tipo.CONCATENACION, fila_inicial, columna_inicial);
-
         tokens.add(token);
 
           numero_token++;
@@ -273,11 +256,8 @@ public class Analizador {
         if (!lector.finArchivo() && lector.getCaracter_actual() == '>') {
 
             lexema += lector.getCaracter_actual();
-
             lector.avanzar();
-
             Token token = new Token( numero_token, lexema, Tipo.CONECTOR, fila_inicial, columna_inicial);
-
             tokens.add(token);
 
             numero_token++;
@@ -303,7 +283,6 @@ public class Analizador {
 
         
         lexema += lector.getCaracter_actual();
-
         lector.avanzar();
 
          while (!lector.finArchivo() && esParteIdentificador(lector.getCaracter_actual())) {
