@@ -1,6 +1,9 @@
 digraph AFD_PromptZal {
     rankdir=LR;
-    node [shape=circle];
+    nodesep=0.8;
+    ranksep=1.2;
+    node [shape=circle, fontsize=12];
+    edge [fontsize=10];
     inicio [shape=point];
     inicio -> q0;
     q1 [shape=doublecircle];
@@ -11,7 +14,7 @@ digraph AFD_PromptZal {
     q14 [shape=doublecircle];
     q15 [shape=doublecircle];
     q16 [shape=doublecircle];
-    q0 -> q1 [label="LETRA, _"];
+    q0 -> q1 [label="LETRA / _"];
     q0 -> q2 [label="DIGITO"];
     q0 -> q5 [label="\""];
     q0 -> q14 [label="="];
@@ -19,22 +22,22 @@ digraph AFD_PromptZal {
     q0 -> q7 [label="-"];
     q0 -> q9 [label="@"];
     q0 -> q10 [label="/"];
-    q0 -> q16 [label="{, }, (, ), ,"];
+    q0 -> q16 [label="{ } ( ) ,"];
     q0 -> q0 [label="ESPACIO, TAB, SALTO DE LINEA, RETORNO"];
-    q1 -> q1 [label="LETRA, DIGITO, _"];
+    q1 -> q1 [label="LETRA / DIGITO / _"];
     q2 -> q2 [label="DIGITO"];
     q2 -> q3 [label="."];
     q3 -> q4 [label="DIGITO"];
     q4 -> q4 [label="DIGITO"];
-    q5 -> q5 [label="CARACTER EXCEPTO \" Y SALTO DE LINEA"];
+    q5 -> q5 [label="EXCEPTO \"  SALTO LINEA"];
     q5 -> q6 [label="\""];
     q7 -> q8 [label=">"];
-    q9 -> q9 [label="LETRA, DIGITO, _"];
+    q9 -> q9 [label="LETRA/ DIGITO/ _"];
     q10 -> q11 [label="/"];
     q10 -> q12 [label="*"];
     q11 -> q11 [label="CUALQUIER CARACTER"];
     q11 -> q0 [label="SALTO DE LINEA"];
-    q12 -> q12 [label="CUALQUIER CARACTER EXCEPTO *"];
+    q12 -> q12 [label="EXCEPTO *"];
     q12 -> q13 [label="*"];
     q13 -> q0 [label="/"];
     q13 -> q13 [label="*"];

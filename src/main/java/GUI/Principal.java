@@ -12,6 +12,8 @@ import com.mycompany.prueba.Reporte;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Desktop;
+import java.io.File;
 
 /**
  *
@@ -28,6 +30,8 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
+        configurarTablas();
+        configurarInterfaz();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         
@@ -54,6 +58,7 @@ public class Principal extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         JPEncabezado = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         JPTokens = new javax.swing.JPanel();
@@ -76,6 +81,10 @@ public class Principal extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        JPContenedor.setBackground(new java.awt.Color(0, 0, 0));
+
+        JPbotones.setBackground(new java.awt.Color(0, 0, 0));
 
         JBtnReportes.setText("Exportar Reporte");
         JBtnReportes.addActionListener(this::JBtnReportesActionPerformed);
@@ -123,7 +132,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        JPtexto.setBackground(new java.awt.Color(255, 255, 255));
+        JPtexto.setBackground(new java.awt.Color(0, 0, 0));
 
         jButton4.setBackground(new java.awt.Color(204, 204, 204));
         jButton4.setForeground(new java.awt.Color(0, 0, 0));
@@ -147,19 +156,31 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel1.setText("               Datos obntemidos del analisis");
+        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("               Datos obntenidos del analisis");
 
-        JPEncabezado.setBackground(new java.awt.Color(0, 51, 255));
+        JPEncabezado.setBackground(new java.awt.Color(51, 51, 51));
+
+        jLabel3.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("PROMPTZAL");
 
         javax.swing.GroupLayout JPEncabezadoLayout = new javax.swing.GroupLayout(JPEncabezado);
         JPEncabezado.setLayout(JPEncabezadoLayout);
         JPEncabezadoLayout.setHorizontalGroup(
             JPEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(JPEncabezadoLayout.createSequentialGroup()
+                .addGap(572, 572, 572)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         JPEncabezadoLayout.setVerticalGroup(
             JPEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 80, Short.MAX_VALUE)
+            .addGroup(JPEncabezadoLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
@@ -174,10 +195,7 @@ public class Principal extends javax.swing.JFrame {
 
         tablaTokens.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "No", "Lexema", "Tipo", "Fila", "Columna"
@@ -217,9 +235,9 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPTokensLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
             .addGroup(JPTokensLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(JPTokensLayout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -307,18 +325,18 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        JPDatos.setBackground(new java.awt.Color(255, 255, 255));
+        JPDatos.setBackground(new java.awt.Color(102, 102, 102));
 
         JLTotalErrores.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        JLTotalErrores.setForeground(new java.awt.Color(0, 0, 0));
+        JLTotalErrores.setForeground(new java.awt.Color(255, 255, 255));
         JLTotalErrores.setText("Total Errores:");
 
         JLTotalLineas.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        JLTotalLineas.setForeground(new java.awt.Color(0, 0, 0));
+        JLTotalLineas.setForeground(new java.awt.Color(255, 255, 255));
         JLTotalLineas.setText("Total Lineas:");
 
         JLTotalTokens.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        JLTotalTokens.setForeground(new java.awt.Color(0, 0, 0));
+        JLTotalTokens.setForeground(new java.awt.Color(255, 255, 255));
         JLTotalTokens.setText("Total Tokens:");
 
         javax.swing.GroupLayout JPDatosLayout = new javax.swing.GroupLayout(JPDatos);
@@ -345,6 +363,8 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabel9.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("              Ingrese el texto para analizar");
 
         javax.swing.GroupLayout JPContenedorLayout = new javax.swing.GroupLayout(JPContenedor);
@@ -353,27 +373,29 @@ public class Principal extends javax.swing.JFrame {
             JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(JPEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(JPContenedorLayout.createSequentialGroup()
-                .addComponent(JPTokens, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JPErrores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JPEstadisticas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPContenedorLayout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(JPbotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(JPContenedorLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(JPtexto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1))
-                        .addGap(31, 31, 31)
-                        .addComponent(JPDatos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPContenedorLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(128, 128, 128))))
+                        .addGap(41, 41, 41)
+                        .addComponent(JPbotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(JPContenedorLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(JPtexto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane1))
+                                .addGap(31, 31, 31)
+                                .addComponent(JPDatos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPContenedorLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(87, 87, 87))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JPContenedorLayout.createSequentialGroup()
+                        .addComponent(JPTokens, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JPErrores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JPEstadisticas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(41, 41, 41))
             .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(JPContenedorLayout.createSequentialGroup()
                     .addGap(484, 484, 484)
@@ -458,26 +480,73 @@ public class Principal extends javax.swing.JFrame {
 
     private void JBtnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnReportesActionPerformed
         
-        
+        if (analizador == null) {
+
+            JOptionPane.showMessageDialog(this,"Primero debe analizar un archivo o texto.","No hay datos",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+         try {
+
+            Reporte reporte = new Reporte(analizador.getTokens(),analizador.getErrores());
+
+            reporte.generarReporteTokens();
+            reporte.generarReporteErrores();
+            reporte.generarReporteEstadisticas();
+
+            int opcion = JOptionPane.showConfirmDialog(this,"Los reportes fueron generados correctamente" + "¿Desea abrir los reportes?","Reportes generados",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
+            
+            if (opcion == JOptionPane.YES_OPTION) {
+
+                abrirReporte("reporte_tokens.html");
+                abrirReporte("reporte_errores.html");
+                abrirReporte("reporte_estadisticas.html");
+            }
+
+        } catch (IOException e) {
+
+            JOptionPane.showMessageDialog(this,"No se  generaron los reportes.\n\n" + e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
         
     }//GEN-LAST:event_JBtnReportesActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        
+        int opcion = JOptionPane.showConfirmDialog(this,"¿Está seguro de que desea salir?","Salir",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         
-        try {
+            try {
+
             AFD generador = new AFD();
             generador.generarAFD();
 
-            JOptionPane.showMessageDialog(this, "El AFD se generó correctamente.\n\n" + "Archivo DOT: afd_promptzal.dot\n" + "Imagen: afd_promptzal.png","AFD generado", JOptionPane.INFORMATION_MESSAGE);
+            int opcion = JOptionPane.showConfirmDialog(this,"El AFD se generó correctamente.\n\n" + "¿Desea abrir la imagen del AFD?", "AFD generado",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
+
+            if (opcion == JOptionPane.YES_OPTION) {
+
+                File imagen = new File("afd_promptzal.png");
+
+                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+
+                    Desktop.getDesktop().open(imagen);
+
+                } else {
+
+                    JOptionPane.showMessageDialog(this,"No se puede abrir automáticamente la imagen.\n", "Abrir AFD", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
 
         } catch (IOException e) {
 
-                JOptionPane.showMessageDialog(this, "No se pudo generar el AFD.\n\n" + e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"No se pudo generar el AFD.\n\n"+ e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     //Métodos para los botones
@@ -684,6 +753,92 @@ public class Principal extends javax.swing.JFrame {
         JLTotalErrores.setText("Total de errores: " + total_errores);
         JLTotalLineas.setText("Total de líneas: " + total_lineas);
 }
+    
+    
+    private void configurarTablas() {
+
+        java.awt.Color fondo_tabla =new java.awt.Color(30, 33, 40);
+        java.awt.Color texto =new java.awt.Color(230, 230, 230);
+
+        configurarTabla(tablaTokens,jScrollPane3,fondo_tabla,texto);
+        configurarTabla(tablaErrores,jScrollPane4,fondo_tabla,texto);
+        configurarTabla(tablaEstadisticas,jScrollPane5,fondo_tabla,texto);
+    }
+
+    private void configurarTabla(javax.swing.JTable tabla,javax.swing.JScrollPane scroll,java.awt.Color fondo,java.awt.Color texto) {
+
+        // Tabla
+        tabla.setBackground(fondo);
+        tabla.setForeground(texto);
+
+        // Área vacía del JScrollPane
+        scroll.setBackground(fondo);
+        scroll.getViewport().setBackground(fondo);
+
+        // Altura de las filas
+        tabla.setRowHeight(28);
+
+        // Fuente
+        tabla.setFont(new java.awt.Font("Segoe UI",java.awt.Font.PLAIN,13));
+
+        // Color de selección
+        tabla.setSelectionBackground(new java.awt.Color(108, 99, 255));
+        tabla.setSelectionForeground(java.awt.Color.WHITE);
+
+        // Encabezado
+        tabla.getTableHeader().setBackground(new java.awt.Color(108, 99, 255));
+        tabla.getTableHeader().setForeground(java.awt.Color.WHITE);
+        tabla.getTableHeader().setFont(new java.awt.Font("Segoe UI",java.awt.Font.BOLD,13));
+
+        // Altura del encabezado
+        tabla.getTableHeader().setPreferredSize( new java.awt.Dimension(0, 32));
+    }
+    
+    private void configurarInterfaz() {
+
+        java.awt.Color fondo_oscuro =new java.awt.Color(30, 33, 40);
+        java.awt.Color texto_claro =new java.awt.Color(230, 230, 230);
+
+        // Área de texto
+        jTextArea1.setBackground(fondo_oscuro);
+        jTextArea1.setForeground(texto_claro);
+        jTextArea1.setCaretColor(texto_claro);
+        jTextArea1.setFont(new java.awt.Font("Segoe UI",java.awt.Font.PLAIN,14));
+        jTextArea1.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Panel de datos
+        JPDatos.setBackground(fondo_oscuro);
+    }
+    
+    private void abrirReporte(String nombre_archivo) {
+
+        try {
+
+            File archivo = new File(nombre_archivo);
+
+            if (!archivo.exists()) {
+
+                JOptionPane.showMessageDialog(this,"No se encontró el archivo:\n"+ archivo.getAbsolutePath(),"Archivo no encontrado",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+
+                Desktop.getDesktop().browse( archivo.toURI());
+
+            } else {
+
+                JOptionPane.showMessageDialog(this,
+                    "No se puede abrir automáticamente el navegador"+ archivo.getAbsolutePath(),"Abrir reporte",JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (IOException e) {
+
+            JOptionPane.showMessageDialog(this,"No se pudo abrir el reporte" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton JBtnReportes;
@@ -705,6 +860,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

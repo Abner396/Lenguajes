@@ -19,7 +19,10 @@ public class AFD {
 
         dot.append("digraph AFD_PromptZal {\n");
         dot.append("    rankdir=LR;\n");
-        dot.append("    node [shape=circle];\n");
+        dot.append("    nodesep=0.8;\n");
+        dot.append("    ranksep=1.2;\n");
+        dot.append("    node [shape=circle, fontsize=12];\n");
+        dot.append("    edge [fontsize=10];\n");
 
         // Estado inicial
         dot.append("    inicio [shape=point];\n");
@@ -36,7 +39,7 @@ public class AFD {
         dot.append("    q16 [shape=doublecircle];\n");
 
         // q0 - Estado inicial
-        agregarTransicion(dot, "q0", "q1", "LETRA, _");
+        agregarTransicion(dot, "q0", "q1", "LETRA / _");
         agregarTransicion(dot, "q0", "q2", "DIGITO");
         agregarTransicion(dot, "q0", "q5", "\"");
         agregarTransicion(dot, "q0", "q14", "=");
@@ -44,11 +47,11 @@ public class AFD {
         agregarTransicion(dot, "q0", "q7", "-");
         agregarTransicion(dot, "q0", "q9", "@");
         agregarTransicion(dot, "q0", "q10", "/");
-        agregarTransicion(dot, "q0", "q16", "{, }, (, ), ,");
+        agregarTransicion(dot, "q0", "q16", "{ } ( ) ,");
         agregarTransicion(dot, "q0", "q0","ESPACIO, TAB, SALTO DE LINEA, RETORNO");
 
         // q1 - Identificador
-        agregarTransicion(dot, "q1", "q1", "LETRA, DIGITO, _");
+        agregarTransicion(dot, "q1", "q1", "LETRA / DIGITO / _");
 
         // q2 - Entero
         agregarTransicion(dot, "q2", "q2", "DIGITO");
@@ -61,14 +64,14 @@ public class AFD {
         agregarTransicion(dot, "q4", "q4", "DIGITO");
 
         // q5 - Interior de cadena
-        agregarTransicion(dot, "q5", "q5","CARACTER EXCEPTO \" Y SALTO DE LINEA");
+        agregarTransicion(dot, "q5", "q5","EXCEPTO \"  SALTO LINEA");
         agregarTransicion(dot, "q5", "q6", "\"");
 
         // q7 - Después de '-'
         agregarTransicion(dot, "q7", "q8", ">");
 
         // q9 - Directiva
-        agregarTransicion(dot, "q9", "q9", "LETRA, DIGITO, _");
+        agregarTransicion(dot, "q9", "q9", "LETRA/ DIGITO/ _");
 
         // q10 - Después de '/'
         agregarTransicion(dot, "q10", "q11", "/");
@@ -79,7 +82,7 @@ public class AFD {
         agregarTransicion(dot, "q11", "q0", "SALTO DE LINEA");
 
         // q12 - Comentario de bloque
-        agregarTransicion(dot, "q12", "q12","CUALQUIER CARACTER EXCEPTO *");
+        agregarTransicion(dot, "q12", "q12","EXCEPTO *");
         agregarTransicion(dot, "q12", "q13", "*");
 
         // q13 - Posible cierre de comentario
