@@ -523,14 +523,14 @@ public class Principal extends javax.swing.JFrame {
         
             try {
 
-            AFD generador = new AFD();
-            generador.generarAFD();
+                AFD generador = new AFD();
+                generador.generarAFD();
 
             int opcion = JOptionPane.showConfirmDialog(this,"El AFD se generó correctamente.\n\n" + "¿Desea abrir la imagen del AFD?", "AFD generado",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
 
             if (opcion == JOptionPane.YES_OPTION) {
 
-                File imagen = new File("afd_promptzal.png");
+                    File imagen = new File("afd_promptzal.png");
 
                 if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
 
@@ -619,9 +619,8 @@ public class Principal extends javax.swing.JFrame {
     
     private void mostrarTokens() {
 
-    DefaultTableModel modelo = (DefaultTableModel) tablaTokens.getModel();
-
-    modelo.setRowCount(0);
+        DefaultTableModel modelo = (DefaultTableModel) tablaTokens.getModel();
+        modelo.setRowCount(0);
 
     for (com.mycompany.prueba.Token token : analizador.getTokens()) {
 
@@ -634,7 +633,7 @@ public class Principal extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tablaErrores.getModel();
         modelo.setRowCount(0);
 
-        for (com.mycompany.prueba.Error error : analizador.getErrores()) {
+        for (com.mycompany.prueba.ErrorL error : analizador.getErrores()) {
 
             modelo.addRow(new Object[]{error.getLexema(),error.getTipo(),error.getFila(),error.getColumna()});
         }   

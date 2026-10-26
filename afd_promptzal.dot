@@ -14,6 +14,7 @@ digraph AFD_PromptZal {
     q14 [shape=doublecircle];
     q15 [shape=doublecircle];
     q16 [shape=doublecircle];
+    q19 [shape=doublecircle];
     q0 -> q1 [label="LETRA / _"];
     q0 -> q2 [label="DIGITO"];
     q0 -> q5 [label="\""];
@@ -24,6 +25,7 @@ digraph AFD_PromptZal {
     q0 -> q10 [label="/"];
     q0 -> q16 [label="{ } ( ) ,"];
     q0 -> q0 [label="ESPACIO, TAB, SALTO DE LINEA, RETORNO"];
+    q0 -> q19 [label="#"];
     q1 -> q1 [label="LETRA / DIGITO / _"];
     q2 -> q2 [label="DIGITO"];
     q2 -> q3 [label="."];

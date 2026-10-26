@@ -37,6 +37,7 @@ public class AFD {
         dot.append("    q14 [shape=doublecircle];\n");
         dot.append("    q15 [shape=doublecircle];\n");
         dot.append("    q16 [shape=doublecircle];\n");
+        dot.append("    q19 [shape=doublecircle];\n");
 
         // q0 - Estado inicial
         agregarTransicion(dot, "q0", "q1", "LETRA / _");
@@ -49,6 +50,7 @@ public class AFD {
         agregarTransicion(dot, "q0", "q10", "/");
         agregarTransicion(dot, "q0", "q16", "{ } ( ) ,");
         agregarTransicion(dot, "q0", "q0","ESPACIO, TAB, SALTO DE LINEA, RETORNO");
+        agregarTransicion(dot, "q0", "q19", "#");
 
         // q1 - Identificador
         agregarTransicion(dot, "q1", "q1", "LETRA / DIGITO / _");

@@ -1,13 +1,13 @@
 package com.mycompany.prueba;
 
-public class Error {
+public class ErrorL {
     
     private String lexema;
     private String tipo;
     private int fila;
     private int columna;
 
-    public Error(String lexema, String tipo, int fila, int columna) {
+    public ErrorL(String lexema, String tipo, int fila, int columna) {
 
         this.lexema = lexema;
         this.tipo = tipo;

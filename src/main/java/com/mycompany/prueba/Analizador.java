@@ -8,7 +8,7 @@ public class Analizador {
 
     private Lector lector;
     private List<Token> tokens;
-    private List<Error> errores;
+    private List<ErrorL> errores;
     private int numero_token;
 
     public Analizador(Lector lector) {
@@ -42,7 +42,7 @@ public class Analizador {
 
                 reconocerCadena();
 
-            } else if (Caracter_actual == '=') {
+            } else if (Caracter_actual == '=' || Caracter_actual =='#') {
 
                 reconocerAsignacion();
                 
@@ -132,7 +132,7 @@ public class Analizador {
 
         } else {
 
-            Error error = new Error(lexema, "Numero decimal incompleto", fila_inicial, columna_inicial);
+            ErrorL error = new ErrorL(lexema, "Numero decimal incompleto", fila_inicial, columna_inicial);
 
             errores.add(error);
             System.out.println(error);
@@ -191,7 +191,7 @@ public class Analizador {
 
           } else {
 
-            Error error = new Error(lexema, "Cadena sin cerrar", fila_inicial, columna_inicial);
+            ErrorL error = new ErrorL(lexema, "Cadena sin cerrar", fila_inicial, columna_inicial);
             errores.add(error);
             System.out.println(error);
 
@@ -266,7 +266,7 @@ public class Analizador {
 
         } else {
 
-            Error error = new Error( lexema, "Caracter '-' no reconocido", fila_inicial, columna_inicial);
+            ErrorL error = new ErrorL( lexema, "Caracter '-' no reconocido", fila_inicial, columna_inicial);
 
             errores.add(error);
 
@@ -303,7 +303,7 @@ public class Analizador {
 
         } else {
 
-            Error error = new Error(lexema, "Directiva no reconocida", fila_inicial,  columna_inicial);
+            ErrorL error = new ErrorL(lexema, "Directiva no reconocida", fila_inicial,  columna_inicial);
 
             errores.add(error);
 
@@ -375,7 +375,7 @@ public class Analizador {
                         //bueno aqui no tengo que hacer nada creo...
             } else {
 
-            Error error = new Error( lexema, "Comentario de bloque sin cerrar", fila_inicial, columna_inicial);
+            ErrorL error = new ErrorL( lexema, "Comentario de bloque sin cerrar", fila_inicial, columna_inicial);
 
             errores.add(error);
 
@@ -384,7 +384,7 @@ public class Analizador {
 
          } else {
 
-        Error error = new Error( lexema, "Caracter '/' no reconocido", fila_inicial,  columna_inicial);
+        ErrorL error = new ErrorL( lexema, "Caracter '/' no reconocido", fila_inicial,  columna_inicial);
 
         errores.add(error);
 
@@ -423,7 +423,7 @@ public class Analizador {
 
         lector.avanzar();
 
-        Error error = new Error(lexema, "Caracter no reconocido", fila_inicial, columna_inicial);
+        ErrorL error = new ErrorL(lexema, "Caracter no reconocido", fila_inicial, columna_inicial);
 
         errores.add(error);
 
@@ -501,7 +501,7 @@ public class Analizador {
         return tokens;
     }
 
-     public List<Error> getErrores() {
+     public List<ErrorL> getErrores() {
 
         return errores;
     }

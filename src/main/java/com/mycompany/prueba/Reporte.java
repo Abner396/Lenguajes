@@ -7,9 +7,9 @@ import java.util.List;
 public class Reporte {
 
     private List<Token> tokens;
-    private List<Error> errores;
+    private List<ErrorL> errores;
 
-    public Reporte(List<Token> tokens, List<Error> errores) {
+    public Reporte(List<Token> tokens, List<ErrorL> errores) {
 
         this.tokens = tokens;
         this.errores = errores;
@@ -281,7 +281,7 @@ public class Reporte {
             archivo.write("<th>Columna</th>\n");
             archivo.write("</tr>\n");
 
-            for (Error error : errores) {
+            for (ErrorL error : errores) {
 
                 String clase = obtenerClaseError(error.getTipo());
 
@@ -464,7 +464,7 @@ public class Reporte {
             }
         }
 
-        for (Error error : errores) {
+        for (ErrorL error : errores) {
             if (error.getFila() > total_lineas) {
                 total_lineas = error.getFila();
             }
