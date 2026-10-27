@@ -117,11 +117,11 @@ ComentarioBloque = "/*"([^*]|\*+[^*/])*\*+"/"
     return crearToken(Tipo.AGENTE, yytext());
 }
 
-"CONTEXTO" {
+"CONTEXTO" | "contexto" {
     return crearToken(Tipo.CONTEXTO, yytext());
 }
 
-"VARIABLE" {
+"VARIABLE" | "variable" {
     return crearToken(Tipo.VARIABLE, yytext());
 }
 

@@ -5,16 +5,21 @@
 package GUI;
 
 import com.mycompany.prueba.AFD;
-import com.mycompany.prueba.Analizador;
 import com.mycompany.prueba.Buscador;
-import com.mycompany.prueba.Lector;
+import com.mycompany.prueba.ErrorL;
 import com.mycompany.prueba.Reporte;
-import java.io.IOException;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import com.mycompany.prueba.Tipo;
+import com.mycompany.prueba.Token;
+import com.mycompany.prueba.lexico.AnalizadorLexico;
 import java.awt.Desktop;
 import java.io.File;
-
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import com.mycompany.prueba.AnalizadorSintactico;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author abner
@@ -24,7 +29,9 @@ import java.io.File;
 public class Principal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Principal.class.getName());
-    private Analizador analizador;
+    private List<Token> tokens = new ArrayList<>();
+    private List<ErrorL> errores = new ArrayList<>();
+    private List<String> erroresSintacticos = new ArrayList<>();
     /**
      * Creates new form Principal
      */
@@ -480,7 +487,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void JBtnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBtnReportesActionPerformed
         
-        if (analizador == null) {
+        if (tokens.isEmpty() && errores.isEmpty()) {
 
             JOptionPane.showMessageDialog(this,"Primero debe analizar un archivo o texto.","No hay datos",JOptionPane.WARNING_MESSAGE);
             return;
@@ -488,7 +495,7 @@ public class Principal extends javax.swing.JFrame {
 
          try {
 
-            Reporte reporte = new Reporte(analizador.getTokens(),analizador.getErrores());
+            Reporte reporte = new Reporte(tokens, errores);
 
             reporte.generarReporteTokens();
             reporte.generarReporteErrores();
@@ -585,63 +592,180 @@ public class Principal extends javax.swing.JFrame {
     }
     
     private void analizarTexto() {
+    
 
-        String contenido = jTextArea1.getText();
+    String contenido = jTextArea1.getText();
 
-        if (contenido.trim().isEmpty()) {
+    if (contenido.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(
+                this,
+                "No hay texto para analizar.",
+                "Analizar",
+                JOptionPane.WARNING_MESSAGE
+        );
+        return;
+    }
 
-            JOptionPane.showMessageDialog(this,"No hay texto para analizar.","Analizar",JOptionPane.WARNING_MESSAGE);
+    try {
+        // 1. Limpiar los resultados del análisis anterior.
+        tokens.clear();
+        errores.clear();
+        erroresSintacticos.clear();
+
+        // 2. Ejecutar el analizador léxico de JFlex.
+        AnalizadorLexico lexer =
+                new AnalizadorLexico(new StringReader(contenido));
+
+        Token token;
+
+        while ((token = lexer.siguienteToken()) != null) {
+            if (token.getTipo() == Tipo.EOF) {
+                break;
+            }
+
+            tokens.add(token);
+        }
+
+        // 3. Recuperar los errores léxicos.
+        errores.addAll(lexer.getErrores());
+
+        // 4. Actualizar las tablas y estadísticas de la interfaz.
+        mostrarTokens();
+        mostrarErrores();
+        mostrarEstadisticas();
+        mostrarResumen();
+
+        System.out.println("ANÁLISIS LÉXICO TERMINADO");
+        System.out.println("Tokens encontrados: " + tokens.size());
+        System.out.println("Errores léxicos encontrados: " + errores.size());
+
+        // 5. Si hay errores léxicos, no ejecutar el parser.
+        if (!errores.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Se encontraron " + errores.size()
+                    + " error(es) léxico(s).\n\n"
+                    + "Revisa la tabla de errores antes de continuar "
+                    + "con el análisis sintáctico.",
+                    "Errores léxicos",
+                    JOptionPane.WARNING_MESSAGE
+            );
 
             return;
         }
 
-        try {
+        // 6. Ejecutar el analizador sintáctico.
+        AnalizadorSintactico parser =
+                new AnalizadorSintactico(tokens);
 
-            Lector lector = new Lector(contenido, true);
-            analizador = new Analizador(lector);
-            analizador.analizar();
-            
-            mostrarTokens();
-            mostrarErrores();
-            mostrarEstadisticas();
-            mostrarResumen();
+        boolean sintaxisCorrecta = parser.analizar();
+        erroresSintacticos.clear();
+        erroresSintacticos.addAll(parser.getErrores());
 
-            System.out.println("ANALISIS TERMINADO");
-            System.out.println("Tokens encontrados: " + analizador.getTokens().size());
-            System.out.println("Errores encontrados: " + analizador.getErrores().size());
-            lector.cerrar();
+        mostrarErrores();
+        // 7. Mostrar el resultado del análisis sintáctico.
+        if (sintaxisCorrecta) {
 
-        } catch (IOException ex) {
+            System.out.println("ANÁLISIS SINTÁCTICO CORRECTO");
 
-            JOptionPane.showMessageDialog(this,"Ocurrió un error durante el análisis:\n" + ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El análisis léxico terminó correctamente.\n"
+                    + "El programa cumple la gramática de PromptZal.",
+                    "Análisis correcto",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } else {
+
+            System.out.println("ERRORES SINTÁCTICOS:");
+
+            for (String error : parser.getErrores()) {
+                System.out.println(error);
+            }
+
+            StringBuilder mensaje = new StringBuilder();
+            mensaje.append("Se encontraron errores sintácticos:\n\n");
+
+            for (String error : parser.getErrores()) {
+                mensaje.append("• ")
+                       .append(error)
+                       .append("\n\n");
+            }
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    mensaje.toString(),
+                    "Errores sintácticos",
+                    JOptionPane.WARNING_MESSAGE
+            );
         }
+
+    } catch (IOException ex) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Ocurrió un error durante el análisis:\n"
+                + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+        );
     }
+}
     
     private void mostrarTokens() {
 
-        DefaultTableModel modelo = (DefaultTableModel) tablaTokens.getModel();
-        modelo.setRowCount(0);
+    DefaultTableModel modelo =
+            (DefaultTableModel) tablaTokens.getModel();
 
-    for (com.mycompany.prueba.Token token : analizador.getTokens()) {
+    modelo.setRowCount(0);
 
-            modelo.addRow(new Object[]{token.getNumero(),token.getLexema(),token.getTipo(),token.getFila(),token.getColumna()});
-        }
+    for (Token token : tokens) {
+
+        modelo.addRow(new Object[]{
+            token.getNumero(),
+            token.getLexema(),
+            token.getTipo(),
+            token.getFila(),
+            token.getColumna()
+        });
     }
+}
     
     private void mostrarErrores() {
 
-        DefaultTableModel modelo = (DefaultTableModel) tablaErrores.getModel();
-        modelo.setRowCount(0);
+    DefaultTableModel modelo =
+            (DefaultTableModel) tablaErrores.getModel();
 
-        for (com.mycompany.prueba.ErrorL error : analizador.getErrores()) {
+    // Limpiar los resultados anteriores.
+    modelo.setRowCount(0);
 
-            modelo.addRow(new Object[]{error.getLexema(),error.getTipo(),error.getFila(),error.getColumna()});
-        }   
+    // Mostrar los errores léxicos.
+    for (ErrorL error : errores) {
+
+        modelo.addRow(new Object[]{
+            error.getLexema(),
+            "LÉXICO: " + error.getTipo(),
+            error.getFila(),
+            error.getColumna()
+        });
     }
-    
-    private void mostrarEstadisticas() {
 
-    DefaultTableModel modelo = (DefaultTableModel) tablaEstadisticas.getModel();
+    // Mostrar los errores sintácticos.
+    for (String error : erroresSintacticos) {
+
+        modelo.addRow(new Object[]{
+            "-",
+            "SINTÁCTICO: " + error,
+            "-",
+            "-"
+        });
+    }
+}
+   private void mostrarEstadisticas() {
+
+    DefaultTableModel modelo =
+            (DefaultTableModel) tablaEstadisticas.getModel();
 
     modelo.setRowCount(0);
 
@@ -659,7 +783,7 @@ public class Principal extends javax.swing.JFrame {
     int asignaciones = 0;
     int concatenaciones = 0;
 
-    for (com.mycompany.prueba.Token token : analizador.getTokens()) {
+    for (Token token : tokens) {
 
         switch (token.getTipo()) {
 
@@ -667,7 +791,11 @@ public class Principal extends javax.swing.JFrame {
                 directivas++;
                 break;
 
-            case PALABRA_RESERVADA:
+            case AGENTE:
+            case CONTEXTO:
+            case VARIABLE:
+            case EJECUTAR:
+            case EXPORTAR:
                 palabras_reservadas++;
                 break;
 
@@ -679,7 +807,7 @@ public class Principal extends javax.swing.JFrame {
                 conectores++;
                 break;
 
-            case IDENTIFICADOR:
+            case ID:
                 identificadores++;
                 break;
 
@@ -687,34 +815,39 @@ public class Principal extends javax.swing.JFrame {
                 cadenas++;
                 break;
 
-            case ENTERO:
-                enteros++;
+            case NUMERO:
+
+                if (token.getLexema().contains(".")) {
+                    decimales++;
+                } else {
+                    enteros++;
+                }
+
                 break;
 
-            case DECIMAL:
-                decimales++;
-                break;
-
-            case OPERADOR:
+            case FLECHA:
                 operadores++;
                 break;
 
-            case DELIMITADOR:
+            case LLAVE_ABRIR:
+            case LLAVE_CERRAR:
+            case PARENTESIS_ABRIR:
+            case PARENTESIS_CERRAR:
+            case COMA:
                 delimitadores++;
                 break;
 
-            case FUNCION:
+            case CARGAR:
                 funciones++;
                 break;
 
-            case ASIGNACION:
+            case IGUAL:
                 asignaciones++;
                 break;
 
-            case CONCATENACION:
+            case MAS:
                 concatenaciones++;
                 break;
-                
         }
     }
 
@@ -731,26 +864,34 @@ public class Principal extends javax.swing.JFrame {
     modelo.addRow(new Object[]{"FUNCION", funciones});
     modelo.addRow(new Object[]{"ASIGNACION", asignaciones});
     modelo.addRow(new Object[]{"CONCATENACION", concatenaciones});
-}
-    
+}       
     private void mostrarResumen() {
 
-        int total_tokens = analizador.getTokens().size();
-        int total_errores = analizador.getErrores().size();
-        int total_lineas = 1;
-        String contenido = jTextArea1.getText();
+    int total_tokens = tokens.size();
+    int total_errores = errores.size();
 
-        for (int i = 0; i < contenido.length(); i++) {
+    int total_lineas = 1;
 
-            if (contenido.charAt(i) == '\n') {
-                total_lineas++;
-            }
+    String contenido = jTextArea1.getText();
+
+    for (int i = 0; i < contenido.length(); i++) {
+
+        if (contenido.charAt(i) == '\n') {
+            total_lineas++;
         }
-        
+    }
 
-        JLTotalTokens.setText("Total de tokens: " + total_tokens);
-        JLTotalErrores.setText("Total de errores: " + total_errores);
-        JLTotalLineas.setText("Total de líneas: " + total_lineas);
+    JLTotalTokens.setText(
+        "Total de tokens: " + total_tokens
+    );
+
+    JLTotalErrores.setText(
+        "Total de errores: " + total_errores
+    );
+
+    JLTotalLineas.setText(
+        "Total de líneas: " + total_lineas
+    );
 }
     
     
