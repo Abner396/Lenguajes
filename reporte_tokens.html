@@ -84,6 +84,10 @@ td {
     background-color: #76d7c4;
     color: #0b5345;
 }
+.sintactico-error {
+    background-color: #d2b4de;
+    color: #512e5f;
+}
 </style>
 </head>
 <body>
@@ -98,269 +102,262 @@ td {
 </tr>
 <tr class='directiva'>
 <td>1</td>
-<td class='lexema'>@MODELO</td>
+<td class='lexema'>@modelo</td>
 <td>DIRECTIVA</td>
 <td>1</td>
 <td>1</td>
 </tr>
 <tr class='cadena'>
 <td>2</td>
-<td class='lexema'>&quot;modelo-ejemplo&quot;</td>
+<td class='lexema'>&quot;claude-sonnet-4-6&quot;</td>
 <td>CADENA</td>
 <td>1</td>
 <td>9</td>
 </tr>
 <tr class='directiva'>
 <td>3</td>
-<td class='lexema'>@FORMATO</td>
+<td class='lexema'>@rol</td>
 <td>DIRECTIVA</td>
 <td>2</td>
 <td>1</td>
 </tr>
 <tr class='cadena'>
 <td>4</td>
-<td class='lexema'>&quot;texto&quot;</td>
+<td class='lexema'>&quot;analista de datos&quot;</td>
 <td>CADENA</td>
 <td>2</td>
+<td>6</td>
+</tr>
+<tr class='directiva'>
+<td>5</td>
+<td class='lexema'>@formato</td>
+<td>DIRECTIVA</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr class='cadena'>
+<td>6</td>
+<td class='lexema'>&quot;markdown&quot;</td>
+<td>CADENA</td>
+<td>3</td>
 <td>10</td>
 </tr>
 <tr class=''>
-<td>5</td>
+<td>7</td>
 <td class='lexema'>AGENTE</td>
 <td>AGENTE</td>
-<td>4</td>
+<td>6</td>
 <td>1</td>
 </tr>
 <tr class=''>
-<td>6</td>
-<td class='lexema'>asistente</td>
+<td>8</td>
+<td class='lexema'>analista</td>
 <td>ID</td>
-<td>4</td>
+<td>6</td>
 <td>8</td>
-</tr>
-<tr class=''>
-<td>7</td>
-<td class='lexema'>{</td>
-<td>LLAVE_ABRIR</td>
-<td>4</td>
-<td>18</td>
-</tr>
-<tr class=''>
-<td>8</td>
-<td class='lexema'>CONTEXTO</td>
-<td>CONTEXTO</td>
-<td>5</td>
-<td>5</td>
 </tr>
 <tr class=''>
 <td>9</td>
-<td class='lexema'>=</td>
-<td>IGUAL</td>
-<td>5</td>
-<td>14</td>
+<td class='lexema'>{</td>
+<td>LLAVE_ABRIR</td>
+<td>6</td>
+<td>18</td>
 </tr>
-<tr class='cadena'>
+<tr class=''>
 <td>10</td>
-<td class='lexema'>&quot;Asistente de pruebas&quot;</td>
-<td>CADENA</td>
+<td class='lexema'>contexto</td>
+<td>CONTEXTO</td>
+<td>7</td>
 <td>5</td>
-<td>16</td>
 </tr>
 <tr class=''>
 <td>11</td>
-<td class='lexema'>VARIABLE</td>
-<td>VARIABLE</td>
-<td>6</td>
-<td>5</td>
-</tr>
-<tr class=''>
-<td>12</td>
-<td class='lexema'>nombre</td>
-<td>ID</td>
-<td>6</td>
+<td class='lexema'>=</td>
+<td>IGUAL</td>
+<td>7</td>
 <td>14</td>
+</tr>
+<tr class='cadena'>
+<td>12</td>
+<td class='lexema'>&quot;Eres un analista de datos experto&quot;</td>
+<td>CADENA</td>
+<td>7</td>
+<td>16</td>
 </tr>
 <tr class=''>
 <td>13</td>
-<td class='lexema'>=</td>
-<td>IGUAL</td>
-<td>6</td>
-<td>21</td>
-</tr>
-<tr class='cadena'>
-<td>14</td>
-<td class='lexema'>&quot;Abner&quot;</td>
-<td>CADENA</td>
-<td>6</td>
-<td>23</td>
-</tr>
-<tr class=''>
-<td>15</td>
-<td class='lexema'>VARIABLE</td>
+<td class='lexema'>variable</td>
 <td>VARIABLE</td>
-<td>7</td>
+<td>8</td>
 <td>5</td>
 </tr>
 <tr class=''>
-<td>16</td>
-<td class='lexema'>edad</td>
-<td>ID</td>
-<td>7</td>
 <td>14</td>
+<td class='lexema'>ventas</td>
+<td>ID</td>
+<td>8</td>
+<td>14</td>
+</tr>
+<tr class=''>
+<td>15</td>
+<td class='lexema'>=</td>
+<td>IGUAL</td>
+<td>8</td>
+<td>21</td>
+</tr>
+<tr class=''>
+<td>16</td>
+<td class='lexema'>CARGAR</td>
+<td>CARGAR</td>
+<td>8</td>
+<td>23</td>
 </tr>
 <tr class=''>
 <td>17</td>
-<td class='lexema'>=</td>
-<td>IGUAL</td>
-<td>7</td>
-<td>19</td>
+<td class='lexema'>(</td>
+<td>PARENTESIS_ABRIR</td>
+<td>8</td>
+<td>29</td>
+</tr>
+<tr class='cadena'>
+<td>18</td>
+<td class='lexema'>&quot;ventas.csv&quot;</td>
+<td>CADENA</td>
+<td>8</td>
+<td>30</td>
 </tr>
 <tr class=''>
-<td>18</td>
-<td class='lexema'>20</td>
-<td>NUMERO</td>
-<td>7</td>
-<td>21</td>
+<td>19</td>
+<td class='lexema'>)</td>
+<td>PARENTESIS_CERRAR</td>
+<td>8</td>
+<td>42</td>
 </tr>
 <tr class='comando'>
-<td>19</td>
+<td>20</td>
 <td class='lexema'>PREGUNTAR</td>
 <td>COMANDO_IA</td>
-<td>9</td>
+<td>10</td>
 <td>5</td>
 </tr>
 <tr class='cadena'>
-<td>20</td>
-<td class='lexema'>&quot;¿Cómo te llamas?&quot;</td>
+<td>21</td>
+<td class='lexema'>&quot;Cuales son las 3 tendencias principales?&quot;</td>
 <td>CADENA</td>
-<td>9</td>
+<td>10</td>
 <td>15</td>
 </tr>
-<tr class=''>
-<td>21</td>
-<td class='lexema'>-&gt;</td>
-<td>FLECHA</td>
-<td>9</td>
-<td>34</td>
-</tr>
-<tr class=''>
-<td>22</td>
-<td class='lexema'>respuesta</td>
-<td>ID</td>
-<td>9</td>
-<td>37</td>
-</tr>
-<tr class='comando'>
-<td>23</td>
-<td class='lexema'>RESUMIR</td>
-<td>COMANDO_IA</td>
-<td>10</td>
-<td>5</td>
-</tr>
-<tr class=''>
-<td>24</td>
-<td class='lexema'>nombre</td>
-<td>ID</td>
-<td>10</td>
-<td>13</td>
-</tr>
-<tr class=''>
-<td>25</td>
-<td class='lexema'>+</td>
-<td>MAS</td>
-<td>10</td>
-<td>20</td>
-</tr>
-<tr class='cadena'>
-<td>26</td>
-<td class='lexema'>&quot; tiene &quot;</td>
-<td>CADENA</td>
-<td>10</td>
-<td>22</td>
-</tr>
-<tr class=''>
-<td>27</td>
-<td class='lexema'>+</td>
-<td>MAS</td>
-<td>10</td>
-<td>32</td>
-</tr>
-<tr class=''>
-<td>28</td>
-<td class='lexema'>edad</td>
-<td>ID</td>
-<td>10</td>
-<td>34</td>
-</tr>
 <tr class='conector'>
-<td>29</td>
+<td>22</td>
 <td class='lexema'>SOBRE</td>
 <td>CONECTOR</td>
 <td>10</td>
-<td>39</td>
+<td>58</td>
+</tr>
+<tr class=''>
+<td>23</td>
+<td class='lexema'>ventas</td>
+<td>ID</td>
+<td>10</td>
+<td>64</td>
+</tr>
+<tr class=''>
+<td>24</td>
+<td class='lexema'>-&gt;</td>
+<td>FLECHA</td>
+<td>10</td>
+<td>71</td>
+</tr>
+<tr class=''>
+<td>25</td>
+<td class='lexema'>tendencias</td>
+<td>ID</td>
+<td>10</td>
+<td>74</td>
+</tr>
+<tr class='comando'>
+<td>26</td>
+<td class='lexema'>RESUMIR</td>
+<td>COMANDO_IA</td>
+<td>11</td>
+<td>5</td>
+</tr>
+<tr class=''>
+<td>27</td>
+<td class='lexema'>tendencias</td>
+<td>ID</td>
+<td>11</td>
+<td>13</td>
+</tr>
+<tr class='conector'>
+<td>28</td>
+<td class='lexema'>EN</td>
+<td>CONECTOR</td>
+<td>11</td>
+<td>24</td>
+</tr>
+<tr class=''>
+<td>29</td>
+<td class='lexema'>100</td>
+<td>NUMERO</td>
+<td>11</td>
+<td>27</td>
 </tr>
 <tr class=''>
 <td>30</td>
-<td class='lexema'>contexto</td>
+<td class='lexema'>palabras</td>
 <td>ID</td>
-<td>10</td>
-<td>45</td>
+<td>11</td>
+<td>31</td>
 </tr>
 <tr class=''>
 <td>31</td>
-<td class='lexema'>}</td>
-<td>LLAVE_CERRAR</td>
+<td class='lexema'>-&gt;</td>
+<td>FLECHA</td>
 <td>11</td>
-<td>1</td>
+<td>40</td>
 </tr>
 <tr class=''>
 <td>32</td>
+<td class='lexema'>resumen</td>
+<td>ID</td>
+<td>11</td>
+<td>43</td>
+</tr>
+<tr class=''>
+<td>33</td>
+<td class='lexema'>}</td>
+<td>LLAVE_CERRAR</td>
+<td>12</td>
+<td>1</td>
+</tr>
+<tr class=''>
+<td>34</td>
 <td class='lexema'>EJECUTAR</td>
 <td>EJECUTAR</td>
 <td>13</td>
 <td>1</td>
 </tr>
 <tr class=''>
-<td>33</td>
-<td class='lexema'>asistente</td>
+<td>35</td>
+<td class='lexema'>analista</td>
 <td>ID</td>
 <td>13</td>
 <td>10</td>
 </tr>
 <tr class=''>
-<td>34</td>
+<td>36</td>
 <td class='lexema'>EXPORTAR</td>
 <td>EXPORTAR</td>
 <td>14</td>
 <td>1</td>
 </tr>
 <tr class=''>
-<td>35</td>
-<td class='lexema'>respuesta</td>
+<td>37</td>
+<td class='lexema'>resumen</td>
 <td>ID</td>
 <td>14</td>
 <td>10</td>
-</tr>
-<tr class=''>
-<td>36</td>
-<td class='lexema'>,</td>
-<td>COMA</td>
-<td>14</td>
-<td>19</td>
-</tr>
-<tr class=''>
-<td>37</td>
-<td class='lexema'>nombre</td>
-<td>ID</td>
-<td>14</td>
-<td>21</td>
-</tr>
-<tr class='comando'>
-<td>38</td>
-<td class='lexema'>PREGUNTAR</td>
-<td>COMANDO_IA</td>
-<td>16</td>
-<td>1</td>
 </tr>
 </table>
 </body>

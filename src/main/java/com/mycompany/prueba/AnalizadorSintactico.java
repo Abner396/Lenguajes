@@ -16,7 +16,7 @@ public class AnalizadorSintactico {
     
     private final List<Token> tokens;
     private final List<String> errores = new ArrayList<>();
-
+    private final List<ErrorSintactico> detallesErrores = new ArrayList<>();
     private int posicion = 0;
 
     public AnalizadorSintactico(List<Token> tokens) {
@@ -27,13 +27,18 @@ public class AnalizadorSintactico {
     // Devuelve true si el programa cumple la gramática.
     public boolean analizar() {
         errores.clear();
+        detallesErrores.clear();
         posicion = 0;
 
         try {
-            programa();
+         programa();
             return true;
+
         } catch (ErrorParser ex) {
+
             errores.add(ex.getMessage());
+            detallesErrores.add(ex.getError());
+
             return false;
         }
     }
@@ -226,46 +231,72 @@ public class AnalizadorSintactico {
 
     // Genera un error con la ubicación del token actual.
     private void lanzarError(String mensaje) {
-        Token token = actual();
 
-        if (token != null) {
-            throw new ErrorParser(
-                "Error sintáctico en fila " + token.getFila()
-                + ", columna " + token.getColumna()
-                + ": " + mensaje
-                + ". Se encontró '" + token.getLexema() + "'"
-                + " (" + token.getTipo() + ")."
-            );
-        }
+    Token token = actual();
 
-        int fila = 1;
-        int columna = 1;
+    if (token != null) {
 
-        if (!tokens.isEmpty()) {
-            Token ultimo = tokens.get(tokens.size() - 1);
-            fila = ultimo.getFila();
-            columna = ultimo.getColumna() + ultimo.getLexema().length();
-        }
+        String descripcion =
+        mensaje
+        + ". Se encontró '" + token.getLexema() + "'"
+        + " (" + token.getTipo() + ").";
 
         throw new ErrorParser(
-            "Error sintáctico al final del archivo, fila "
-            + fila + ", columna " + columna
-            + ": " + mensaje + "."
+                new ErrorSintactico(
+                        descripcion,
+                        token.getFila(),
+                        token.getColumna()
+                )
         );
     }
+
+    int fila = 1;
+    int columna = 1;
+
+    if (!tokens.isEmpty()) {
+
+        Token ultimo = tokens.get(tokens.size() - 1);
+
+        fila = ultimo.getFila();
+        columna = ultimo.getColumna()
+                + ultimo.getLexema().length();
+    }
+
+    String descripcion =
+        "Fin del archivo: " + mensaje + ".";
+
+    throw new ErrorParser(
+            new ErrorSintactico(
+                    descripcion,
+                    fila,
+                    columna
+            )
+    );
+}
 
     // Devuelve los errores encontrados.
     public List<String> getErrores() {
         return new ArrayList<>(errores);
     }
+    
+    public List<ErrorSintactico> getDetallesErrores() {
+    return new ArrayList<>(detallesErrores);
+}
 
     // Excepción interna utilizada para detener el análisis
     // cuando se encuentra un error sintáctico.
     private static class ErrorParser extends RuntimeException {
 
-        public ErrorParser(String mensaje) {
-            super(mensaje);
-        }
+    private final ErrorSintactico error;
+
+    public ErrorParser(ErrorSintactico error) {
+        super(error.getMensaje());
+        this.error = error;
     }
+
+    public ErrorSintactico getError() {
+        return error;
+    }
+}
     
 }

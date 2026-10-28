@@ -20,6 +20,7 @@ import java.util.List;
 import com.mycompany.prueba.AnalizadorSintactico;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.mycompany.prueba.ErrorSintactico;
 /**
  *
  * @author abner
@@ -31,7 +32,7 @@ public class Principal extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Principal.class.getName());
     private List<Token> tokens = new ArrayList<>();
     private List<ErrorL> errores = new ArrayList<>();
-    private List<String> erroresSintacticos = new ArrayList<>();
+    private List<ErrorSintactico> erroresSintacticos = new ArrayList<>();
     /**
      * Creates new form Principal
      */
@@ -495,7 +496,7 @@ public class Principal extends javax.swing.JFrame {
 
          try {
 
-            Reporte reporte = new Reporte(tokens, errores);
+            Reporte reporte = new Reporte(tokens,errores,erroresSintacticos);
 
             reporte.generarReporteTokens();
             reporte.generarReporteErrores();
@@ -659,8 +660,9 @@ public class Principal extends javax.swing.JFrame {
                 new AnalizadorSintactico(tokens);
 
         boolean sintaxisCorrecta = parser.analizar();
+
         erroresSintacticos.clear();
-        erroresSintacticos.addAll(parser.getErrores());
+        erroresSintacticos.addAll(parser.getDetallesErrores());
 
         mostrarErrores();
         // 7. Mostrar el resultado del análisis sintáctico.
@@ -752,17 +754,17 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Mostrar los errores sintácticos.
-    for (String error : erroresSintacticos) {
+    for (ErrorSintactico error : erroresSintacticos) {
 
         modelo.addRow(new Object[]{
             "-",
-            "SINTÁCTICO: " + error,
-            "-",
-            "-"
+            "SINTÁCTICO: " + error.getMensaje(),
+            error.getFila(),
+            error.getColumna()
         });
+        }
     }
-}
-   private void mostrarEstadisticas() {
+    private void mostrarEstadisticas() {
 
     DefaultTableModel modelo =
             (DefaultTableModel) tablaEstadisticas.getModel();

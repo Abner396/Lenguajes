@@ -3,17 +3,28 @@ package com.mycompany.prueba;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Reporte {
 
     private List<Token> tokens;
     private List<ErrorL> errores;
+    private List<ErrorSintactico> erroresSintacticos;
 
     public Reporte(List<Token> tokens, List<ErrorL> errores) {
 
+        this(tokens, errores, new ArrayList<>());
+    }
+
+    public Reporte(
+        List<Token> tokens,
+        List<ErrorL> errores,
+        List<ErrorSintactico> erroresSintacticos) {
+
         this.tokens = tokens;
         this.errores = errores;
-    }
+        this.erroresSintacticos = erroresSintacticos;
+     }
 
     public void generarReporteTokens() throws IOException {
 
@@ -127,6 +138,11 @@ public class Reporte {
         archivo.write("    background-color: #76d7c4;\n");
         archivo.write("    color: #0b5345;\n");
         archivo.write("}\n");
+        
+        archivo.write(".sintactico-error {\n");
+        archivo.write("    background-color: #d2b4de;\n");
+        archivo.write("    color: #512e5f;\n");
+        archivo.write("}\n");
 
         archivo.write("</style>\n");
         archivo.write("</head>\n");
@@ -175,7 +191,7 @@ public class Reporte {
         archivo.write("<head>\n");
         archivo.write("<meta charset='UTF-8'>\n");
         archivo.write("<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n");
-        archivo.write("<title>Reporte de Errores Léxicos</title>\n");
+        archivo.write("<title>Reporte de Errores</title>\n");
 
         archivo.write("<style>\n");
 
@@ -262,9 +278,9 @@ public class Reporte {
         archivo.write("</style>\n");
         archivo.write("</head>\n");
         archivo.write("<body>\n");
-        archivo.write("<h1>Reporte de Errores Léxicos</h1>\n");
+        archivo.write("<h1>Reporte de Errores - PromptZal</h1>\n");
 
-        if (errores.isEmpty()) {
+        if (errores.isEmpty() && erroresSintacticos.isEmpty()) {
 
             archivo.write("<div class='sin-errores'>\n");
             archivo.write("<h2>No se encontraron errores léxicos.</h2>\n");
@@ -291,6 +307,21 @@ public class Reporte {
                 archivo.write("<td>" + error.getFila() + "</td>\n");
                 archivo.write("<td>" + error.getColumna() + "</td>\n");
                 archivo.write("</tr>\n");
+            }
+            
+            // Mostrar los errores sintácticos.
+            for (ErrorSintactico error : erroresSintacticos) {
+            archivo.write("<tr class='sintactico-error'>\n");
+            archivo.write("<td class='lexema'>-</td>\n");
+            archivo.write(
+                "<td>"
+                + escaparHTML(error.getMensaje())
+                + "</td>\n"
+            );
+
+            archivo.write("<td>" + error.getFila() + "</td>\n");
+            archivo.write("<td>" + error.getColumna() + "</td>\n");
+            archivo.write("</tr>\n");
             }
 
             archivo.write("</table>\n");
@@ -454,8 +485,8 @@ public class Reporte {
             }
         }
          
-         int total_tokens = tokens.size();
-        int total_errores = errores.size();
+        int total_tokens = tokens.size();
+        int total_errores =errores.size() + erroresSintacticos.size();
         int total_lineas = 1;
 
         for (Token token : tokens) {
@@ -465,6 +496,12 @@ public class Reporte {
         }
 
         for (ErrorL error : errores) {
+            if (error.getFila() > total_lineas) {
+                total_lineas = error.getFila();
+            }
+        }
+        
+        for (ErrorSintactico error : erroresSintacticos) {
             if (error.getFila() > total_lineas) {
                 total_lineas = error.getFila();
             }
