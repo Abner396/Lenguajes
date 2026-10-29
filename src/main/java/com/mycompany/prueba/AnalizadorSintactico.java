@@ -17,6 +17,7 @@ public class AnalizadorSintactico {
     private final List<Token> tokens;
     private final List<String> errores = new ArrayList<>();
     private final List<ErrorSintactico> detallesErrores = new ArrayList<>();
+    private Nodo raizAST;
     private int posicion = 0;
 
     public AnalizadorSintactico(List<Token> tokens) {
@@ -29,6 +30,7 @@ public class AnalizadorSintactico {
         errores.clear();
         detallesErrores.clear();
         posicion = 0;
+        raizAST = null;
 
         try {
          programa();
@@ -45,158 +47,576 @@ public class AnalizadorSintactico {
 
     // <programa> -> <directivas> <agentes>
     //               <ejecuciones> <exportar> EOF
-    private void programa() {
-        directivas();
-        agentes();
-        ejecuciones();
-        exportar();
+   private void programa() {
 
-        if (actual() != null) {
-            lanzarError("No se esperaba este elemento después de EXPORTAR");
-        }
+    Token inicio = actual();
+
+    raizAST = new Nodo(
+            "PROGRAMA",
+            "PromptZal",
+            inicio != null ? inicio.getFila() : 1,
+            inicio != null ? inicio.getColumna() : 1
+    );
+
+    Nodo nodoDirectivas = directivas();
+
+    if (nodoDirectivas != null) {
+        raizAST.agregarHijo(nodoDirectivas);
     }
+
+    Nodo nodoAgentes = agentes();
+    raizAST.agregarHijo(nodoAgentes);
+
+    Nodo nodoEjecuciones = ejecuciones();
+    raizAST.agregarHijo(nodoEjecuciones);
+
+    Nodo nodoExportar = exportar();
+    raizAST.agregarHijo(nodoExportar);
+
+    if (actual() != null) {
+        lanzarError("No se esperaba este elemento después de EXPORTAR");
+    }
+}
 
     // <directivas> -> DIRECTIVA CADENA <directivas> | ε
-    private void directivas() {
-        while (coincide(Tipo.DIRECTIVA)) {
-            avanzar();
-            esperar(Tipo.CADENA, "una cadena después de la directiva");
-        }
+    private Nodo directivas() {
+
+    Token inicio = actual();
+
+    Nodo nodoDirectivas = new Nodo(
+            "DIRECTIVAS",
+            null,
+            inicio != null ? inicio.getFila() : 1,
+            inicio != null ? inicio.getColumna() : 1
+    );
+
+    while (coincide(Tipo.DIRECTIVA)) {
+
+        Token directiva = actual();
+        avanzar();
+
+        Token valor = actual();
+
+        esperar(
+                Tipo.CADENA,
+                "una cadena después de la directiva"
+        );
+
+        Nodo nodoDirectiva = new Nodo(
+                "DIRECTIVA",
+                directiva.getLexema(),
+                directiva.getFila(),
+                directiva.getColumna()
+        );
+
+        nodoDirectiva.agregarHijo(
+                new Nodo(
+                        "CADENA",
+                        valor.getLexema(),
+                        valor.getFila(),
+                        valor.getColumna()
+                )
+        );
+
+        nodoDirectivas.agregarHijo(nodoDirectiva);
     }
+
+    return nodoDirectivas;
+}
 
     // <agentes> -> <agente> <mas_agentes>
-    private void agentes() {
-        agente();
+    private Nodo agentes() {
 
-        while (coincide(Tipo.AGENTE)) {
-            agente();
-        }
+    Token inicio = actual();
+
+    Nodo nodoAgentes = new Nodo(
+            "AGENTES",
+            null,
+            inicio != null ? inicio.getFila() : 1,
+            inicio != null ? inicio.getColumna() : 1
+    );
+
+    nodoAgentes.agregarHijo(agente());
+
+    while (coincide(Tipo.AGENTE)) {
+        nodoAgentes.agregarHijo(agente());
     }
+
+    return nodoAgentes;
+}
 
     // <agente> -> AGENTE ID LLAVE_A <contexto>
     //             <variables> <comandos> LLAVE_C
-    private void agente() {
-        esperar(Tipo.AGENTE, "AGENTE");
-        esperar(Tipo.ID, "el nombre del agente");
-        esperar(Tipo.LLAVE_ABRIR, "la llave de apertura '{'");
+    private Nodo agente() {
 
-        contexto();
-        variables();
-        comandos();
+    Token tokenAgente = actual();
 
-        esperar(Tipo.LLAVE_CERRAR, "la llave de cierre '}'");
-    }
+    esperar(Tipo.AGENTE, "AGENTE");
+
+    Token nombre = actual();
+    esperar(Tipo.ID, "el nombre del agente");
+
+    Nodo nodoAgente = new Nodo(
+            "AGENTE",
+            nombre.getLexema(),
+            tokenAgente.getFila(),
+            tokenAgente.getColumna()
+    );
+
+    esperar(Tipo.LLAVE_ABRIR, "la llave de apertura '{'");
+
+    Nodo nodoContexto = contexto();
+    nodoAgente.agregarHijo(nodoContexto);
+
+    Nodo nodoVariables = variables();
+    nodoAgente.agregarHijo(nodoVariables);
+
+    Nodo nodoComandos = comandos();
+    nodoAgente.agregarHijo(nodoComandos);
+
+    esperar(Tipo.LLAVE_CERRAR, "la llave de cierre '}'");
+
+    return nodoAgente;
+}
 
     // <contexto> -> CONTEXTO IGUAL CADENA
-    private void contexto() {
-        esperar(Tipo.CONTEXTO, "CONTEXTO");
-        esperar(Tipo.IGUAL, "el operador '='");
-        esperar(Tipo.CADENA, "una cadena para el contexto");
-    }
+    private Nodo contexto() {
+
+    Token inicio = actual();
+
+    esperar(Tipo.CONTEXTO, "CONTEXTO");
+    esperar(Tipo.IGUAL, "el operador '='");
+
+    Token valor = actual();
+
+    esperar(Tipo.CADENA, "una cadena para el contexto");
+
+    Nodo nodoContexto = new Nodo(
+            "CONTEXTO",
+            null,
+            inicio.getFila(),
+            inicio.getColumna()
+    );
+
+    nodoContexto.agregarHijo(
+            new Nodo(
+                    "CADENA",
+                    valor.getLexema(),
+                    valor.getFila(),
+                    valor.getColumna()
+            )
+    );
+
+    return nodoContexto;
+}
 
     // <variables> -> VARIABLE ID IGUAL <expresion> <variables> | ε
-    private void variables() {
-        while (coincide(Tipo.VARIABLE)) {
-            avanzar();
-            esperar(Tipo.ID, "el nombre de la variable");
-            esperar(Tipo.IGUAL, "el operador '='");
-            expresion();
-        }
+    private Nodo variables() {
+
+    Token inicio = actual();
+
+    Nodo nodoVariables = new Nodo(
+            "VARIABLES",
+            null,
+            inicio != null ? inicio.getFila() : 1,
+            inicio != null ? inicio.getColumna() : 1
+    );
+
+    while (coincide(Tipo.VARIABLE)) {
+
+        Token tokenVariable = actual();
+        esperar(Tipo.VARIABLE, "VARIABLE");
+
+        Token nombre = actual();
+        esperar(Tipo.ID, "el nombre de la variable");
+
+        esperar(Tipo.IGUAL, "el operador '='");
+
+        Nodo nodoVariable = new Nodo(
+                "VARIABLE",
+                nombre.getLexema(),
+                tokenVariable.getFila(),
+                tokenVariable.getColumna()
+        );
+
+        nodoVariable.agregarHijo(expresion());
+
+        nodoVariables.agregarHijo(nodoVariable);
     }
+
+    return nodoVariables;
+}
 
     // <comandos> -> <comando> <mas_comandos>
-    private void comandos() {
-        comando();
+    
+    private Nodo comandos() {
+
+    Token inicio = actual();
+
+    Nodo nodoComandos = new Nodo(
+            "COMANDOS",
+            null,
+            inicio != null ? inicio.getFila() : 1,
+            inicio != null ? inicio.getColumna() : 1
+    );
 
         while (coincide(Tipo.COMANDO_IA)) {
-            comando();
+        nodoComandos.agregarHijo(comando());
         }
+
+        return nodoComandos;
     }
+
 
     // <comando> -> COMANDO_IA <expresion>
     //              <conectores> FLECHA ID
-    private void comando() {
-        esperar(Tipo.COMANDO_IA, "un comando de IA");
+    private Nodo comando() {
 
-        expresion();
-        conectores();
+    Token inicio = actual();
 
-        esperar(Tipo.FLECHA, "el operador de resultado '->'");
-        esperar(Tipo.ID, "el nombre de la variable de resultado");
-    }
+    esperar(Tipo.COMANDO_IA, "un comando de IA");
+
+    Nodo nodoComando = new Nodo(
+            "COMANDO",
+            inicio.getLexema(),
+            inicio.getFila(),
+            inicio.getColumna()
+    );
+
+    nodoComando.agregarHijo(expresion());
+
+    Nodo nodoConectores = conectores();
+    nodoComando.agregarHijo(nodoConectores);
+
+    esperar(Tipo.FLECHA, "el operador de resultado '->'");
+
+    Token resultado = actual();
+
+    esperar(
+            Tipo.ID,
+            "el nombre de la variable de resultado"
+    );
+
+    nodoComando.agregarHijo(
+            new Nodo(
+                    "RESULTADO",
+                    resultado.getLexema(),
+                    resultado.getFila(),
+                    resultado.getColumna()
+            )
+    );
+
+    return nodoComando;
+}
 
     // <conectores> -> CONECTOR <expresion> <conectores> | ε
-    private void conectores() {
-        while (coincide(Tipo.CONECTOR)) {
-            avanzar();
-            expresion();
-        }
+    private Nodo conectores() {
+
+    Token inicio = actual();
+
+    Nodo nodoConectores = new Nodo(
+            "CONECTORES",
+            null,
+            inicio != null ? inicio.getFila() : 1,
+            inicio != null ? inicio.getColumna() : 1
+    );
+
+    while (coincide(Tipo.CONECTOR)) {
+
+        Token conector = actual();
+        avanzar();
+
+        Nodo nodoConector = new Nodo(
+                "CONECTOR",
+                conector.getLexema(),
+                conector.getFila(),
+                conector.getColumna()
+        );
+
+        nodoConector.agregarHijo(expresion());
+
+        nodoConectores.agregarHijo(nodoConector);
     }
+
+    return nodoConectores;
+}
 
     // <expresion> -> <termino> <mas_terminos>
-    private void expresion() {
-        termino();
+    private Nodo expresion() {
 
-        while (coincide(Tipo.MAS)) {
-            avanzar();
-            termino();
-        }
+    Nodo nodoExpresion = new Nodo(
+            "EXPRESION",
+            null,
+            actual() != null ? actual().getFila() : 1,
+            actual() != null ? actual().getColumna() : 1
+    );
+
+    nodoExpresion.agregarHijo(termino());
+
+    while (coincide(Tipo.MAS)) {
+
+        Token operador = actual();
+        avanzar();
+
+        Nodo nodoSuma = new Nodo(
+                "SUMA",
+                operador.getLexema(),
+                operador.getFila(),
+                operador.getColumna()
+        );
+
+        nodoSuma.agregarHijo(termino());
+
+        nodoExpresion.agregarHijo(nodoSuma);
     }
+
+    return nodoExpresion;
+}
 
     // <termino> -> CADENA | ID | NUMERO <unidad> | <cargar>
-    private void termino() {
-        if (coincide(Tipo.CADENA)) {
-            avanzar();
-        } else if (coincide(Tipo.ID)) {
-            avanzar();
-        } else if (coincide(Tipo.NUMERO)) {
-            avanzar();
-            unidad();
-        } else if (coincide(Tipo.CARGAR)) {
-            cargar();
-        } else {
-            lanzarError(
-                "Se esperaba una cadena, un identificador, un número o CARGAR"
+    
+    private Nodo termino() {
+
+    Token token = actual();
+
+    if (coincide(Tipo.CADENA)) {
+
+        avanzar();
+
+        return new Nodo(
+                "CADENA",
+                token.getLexema(),
+                token.getFila(),
+                token.getColumna()
+        );
+
+    } else if (coincide(Tipo.ID)) {
+
+        avanzar();
+
+        return new Nodo(
+                "ID",
+                token.getLexema(),
+                token.getFila(),
+                token.getColumna()
+        );
+
+    } else if (coincide(Tipo.NUMERO)
+            || coincide(Tipo.ENTERO)
+            || coincide(Tipo.DECIMAL)) {
+
+        avanzar();
+
+        Nodo nodo = new Nodo(
+                "NUMERO",
+                token.getLexema(),
+                token.getFila(),
+                token.getColumna()
+        );
+
+        if (coincide(Tipo.ID)) {
+
+            Token unidad = actual();
+
+            nodo.agregarHijo(
+                    new Nodo(
+                            "UNIDAD",
+                            unidad.getLexema(),
+                            unidad.getFila(),
+                            unidad.getColumna()
+                    )
             );
+
+            avanzar();
         }
+
+        return nodo;
+
+    } else if (coincide(Tipo.CARGAR)) {
+
+        return cargar();
+
+    } else {
+
+        lanzarError(
+                "Se esperaba una cadena, un identificador, "
+                + "un número o CARGAR"
+        );
+
+        return null;
     }
+    }
+
 
     // <unidad> -> ID | ε
-    private void unidad() {
-        if (coincide(Tipo.ID)) {
-            avanzar();
-        }
+    private Nodo unidad() {
+
+    Token token = actual();
+
+    if (coincide(Tipo.ID)) {
+
+        avanzar();
+
+        return new Nodo(
+                "UNIDAD",
+                token.getLexema(),
+                token.getFila(),
+                token.getColumna()
+        );
     }
 
+    return null;
+}
     // <cargar> -> CARGAR PAR_A CADENA PAR_C
-    private void cargar() {
-        esperar(Tipo.CARGAR, "CARGAR");
-        esperar(Tipo.PARENTESIS_ABRIR, "el paréntesis de apertura '('");
-        esperar(Tipo.CADENA, "el nombre del archivo entre comillas");
-        esperar(Tipo.PARENTESIS_CERRAR, "el paréntesis de cierre ')'");
-    }
+    private Nodo cargar() {
+
+    Token inicio = actual();
+
+    esperar(Tipo.CARGAR, "CARGAR");
+
+    esperar(
+            Tipo.PARENTESIS_ABRIR,
+            "el paréntesis de apertura '('"
+    );
+
+    Token archivo = actual();
+
+    esperar(
+            Tipo.CADENA,
+            "el nombre del archivo entre comillas"
+    );
+
+    esperar(
+            Tipo.PARENTESIS_CERRAR,
+            "el paréntesis de cierre ')'"
+    );
+
+    Nodo nodoCargar = new Nodo(
+            "CARGAR",
+            null,
+            inicio.getFila(),
+            inicio.getColumna()
+    );
+
+    nodoCargar.agregarHijo(
+            new Nodo(
+                    "ARCHIVO",
+                    archivo.getLexema(),
+                    archivo.getFila(),
+                    archivo.getColumna()
+            )
+    );
+
+    return nodoCargar;
+}
 
     // <ejecuciones> -> EJECUTAR ID <mas_ejecuciones>
-    private void ejecuciones() {
-        esperar(Tipo.EJECUTAR, "EJECUTAR");
-        esperar(Tipo.ID, "el nombre del agente que se ejecutará");
+    private Nodo ejecuciones() {
 
-        while (coincide(Tipo.EJECUTAR)) {
-            avanzar();
-            esperar(Tipo.ID, "el nombre del agente que se ejecutará");
-        }
+    Token inicio = actual();
+
+    Nodo nodoEjecuciones = new Nodo(
+            "EJECUCIONES",
+            null,
+            inicio != null ? inicio.getFila() : 1,
+            inicio != null ? inicio.getColumna() : 1
+    );
+
+    esperar(Tipo.EJECUTAR, "EJECUTAR");
+
+    Token nombre = actual();
+
+    esperar(
+            Tipo.ID,
+            "el nombre del agente que se ejecutará"
+    );
+
+    nodoEjecuciones.agregarHijo(
+            new Nodo(
+                    "EJECUTAR",
+                    nombre.getLexema(),
+                    nombre.getFila(),
+                    nombre.getColumna()
+            )
+    );
+
+    while (coincide(Tipo.EJECUTAR)) {
+
+        avanzar();
+
+        Token siguiente = actual();
+
+        esperar(
+                Tipo.ID,
+                "el nombre del agente que se ejecutará"
+        );
+
+        nodoEjecuciones.agregarHijo(
+                new Nodo(
+                        "EJECUTAR",
+                        siguiente.getLexema(),
+                        siguiente.getFila(),
+                        siguiente.getColumna()
+                )
+        );
     }
 
-    // <exportar> -> EXPORTAR ID <mas_ids>
-    private void exportar() {
-        esperar(Tipo.EXPORTAR, "EXPORTAR");
-        esperar(Tipo.ID, "el nombre del resultado que se exportará");
+    return nodoEjecuciones;
+}
 
-        while (coincide(Tipo.COMA)) {
-            avanzar();
-            esperar(Tipo.ID, "un identificador después de la coma");
-        }
+    
+    private Nodo exportar() {
+
+    Token inicio = actual();
+
+    Nodo nodoExportar = new Nodo(
+            "EXPORTACIONES",
+            null,
+            inicio != null ? inicio.getFila() : 1,
+            inicio != null ? inicio.getColumna() : 1
+    );
+
+    esperar(Tipo.EXPORTAR, "EXPORTAR");
+
+    Token nombre = actual();
+
+    esperar(
+            Tipo.ID,
+            "el nombre del resultado que se exportará"
+    );
+
+    nodoExportar.agregarHijo(
+            new Nodo(
+                    "EXPORTAR",
+                    nombre.getLexema(),
+                    nombre.getFila(),
+                    nombre.getColumna()
+            )
+    );
+
+    while (coincide(Tipo.COMA)) {
+
+        avanzar();
+
+        Token siguiente = actual();
+
+        esperar(
+                Tipo.ID,
+                "un identificador después de la coma"
+        );
+
+        nodoExportar.agregarHijo(
+                new Nodo(
+                        "EXPORTAR",
+                        siguiente.getLexema(),
+                        siguiente.getFila(),
+                        siguiente.getColumna()
+                )
+        );
     }
+
+    return nodoExportar;
+}
 
     // Comprueba si el token actual tiene el tipo indicado.
     private boolean coincide(Tipo tipo) {
@@ -204,7 +624,7 @@ public class AnalizadorSintactico {
         return token != null && token.getTipo() == tipo;
     }
 
-    // Devuelve el token actual sin consumirlo.
+    // Devuelve el token actual
     private Token actual() {
         if (posicion >= tokens.size()) {
             return null;
@@ -220,7 +640,7 @@ public class AnalizadorSintactico {
         }
     }
 
-    // Comprueba y consume el tipo de token esperado.
+    // Comprueba  el tipo de token esperado.
     private void esperar(Tipo tipo, String descripcion) {
         if (coincide(tipo)) {
             avanzar();
@@ -229,7 +649,7 @@ public class AnalizadorSintactico {
         }
     }
 
-    // Genera un error con la ubicación del token actual.
+    
     private void lanzarError(String mensaje) {
 
     Token token = actual();
@@ -283,8 +703,7 @@ public class AnalizadorSintactico {
     return new ArrayList<>(detallesErrores);
 }
 
-    // Excepción interna utilizada para detener el análisis
-    // cuando se encuentra un error sintáctico.
+    
     private static class ErrorParser extends RuntimeException {
 
     private final ErrorSintactico error;
@@ -298,5 +717,9 @@ public class AnalizadorSintactico {
         return error;
     }
 }
+    
+     public Nodo getRaizAST() {
+        return raizAST;
+    }
     
 }

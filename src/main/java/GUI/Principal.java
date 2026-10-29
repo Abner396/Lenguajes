@@ -5,6 +5,8 @@
 package GUI;
 
 import com.mycompany.prueba.AFD;
+import com.mycompany.prueba.AST;
+import com.mycompany.prueba.AnalizadorSemantico;
 import com.mycompany.prueba.Buscador;
 import com.mycompany.prueba.ErrorL;
 import com.mycompany.prueba.Reporte;
@@ -21,6 +23,8 @@ import com.mycompany.prueba.AnalizadorSintactico;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import com.mycompany.prueba.ErrorSintactico;
+import com.mycompany.prueba.Nodo;
+import com.mycompany.prueba.TablaSimbolos;
 /**
  *
  * @author abner
@@ -33,6 +37,8 @@ public class Principal extends javax.swing.JFrame {
     private List<Token> tokens = new ArrayList<>();
     private List<ErrorL> errores = new ArrayList<>();
     private List<ErrorSintactico> erroresSintacticos = new ArrayList<>();
+    private Nodo raizAST;
+    private final List<String> erroresSemanticos = new ArrayList<>();   
     /**
      * Creates new form Principal
      */
@@ -42,9 +48,9 @@ public class Principal extends javax.swing.JFrame {
         configurarInterfaz();
         this.setVisible(true);
         this.setLocationRelativeTo(null);
+      
         
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -62,6 +68,7 @@ public class Principal extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        JBAST = new javax.swing.JButton();
         JPtexto = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -86,6 +93,9 @@ public class Principal extends javax.swing.JFrame {
         JLTotalErrores = new javax.swing.JLabel();
         JLTotalLineas = new javax.swing.JLabel();
         JLTotalTokens = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        Simbolos = new javax.swing.JTable();
+        jLabel10 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -109,19 +119,22 @@ public class Principal extends javax.swing.JFrame {
         jButton6.setText("Salir");
         jButton6.addActionListener(this::jButton6ActionPerformed);
 
+        JBAST.setText("AST");
+        JBAST.addActionListener(this::JBASTActionPerformed);
+
         javax.swing.GroupLayout JPbotonesLayout = new javax.swing.GroupLayout(JPbotones);
         JPbotones.setLayout(JPbotonesLayout);
         JPbotonesLayout.setHorizontalGroup(
             JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JPbotonesLayout.createSequentialGroup()
                 .addGap(64, 64, 64)
-                .addGroup(JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(JBAST, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(JPbotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(JBtnReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(JBtnReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(67, Short.MAX_VALUE))
         );
         JPbotonesLayout.setVerticalGroup(
@@ -135,6 +148,8 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(JBtnReportes)
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
+                .addGap(18, 18, 18)
+                .addComponent(JBAST)
                 .addGap(18, 18, 18)
                 .addComponent(jButton6)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -243,7 +258,7 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPTokensLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(JPTokensLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -347,28 +362,49 @@ public class Principal extends javax.swing.JFrame {
         JLTotalTokens.setForeground(new java.awt.Color(255, 255, 255));
         JLTotalTokens.setText("Total Tokens:");
 
+        Simbolos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Tipo", "Cantidad"
+            }
+        ));
+        jScrollPane6.setViewportView(Simbolos);
+
+        jLabel10.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Simbolos");
+
         javax.swing.GroupLayout JPDatosLayout = new javax.swing.GroupLayout(JPDatos);
         JPDatos.setLayout(JPDatosLayout);
         JPDatosLayout.setHorizontalGroup(
             JPDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JPDatosLayout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(JPDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(JPDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(JLTotalTokens)
                     .addComponent(JLTotalErrores)
-                    .addComponent(JLTotalLineas, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(JLTotalLineas)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 94, Short.MAX_VALUE))
+            .addGroup(JPDatosLayout.createSequentialGroup()
+                .addGap(132, 132, 132)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         JPDatosLayout.setVerticalGroup(
             JPDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JPDatosLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addContainerGap()
                 .addComponent(JLTotalTokens)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(JLTotalErrores)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(JLTotalLineas)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jLabel9.setBackground(new java.awt.Color(0, 0, 0));
@@ -391,19 +427,19 @@ public class Principal extends javax.swing.JFrame {
                                 .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(JPtexto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jScrollPane1))
-                                .addGap(31, 31, 31)
-                                .addComponent(JPDatos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(JPDatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPContenedorLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(87, 87, 87))))
+                                .addGap(61, 61, 61))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JPContenedorLayout.createSequentialGroup()
                         .addComponent(JPTokens, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(JPErrores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(JPEstadisticas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(41, 41, 41))
+                .addGap(15, 41, Short.MAX_VALUE))
             .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(JPContenedorLayout.createSequentialGroup()
                     .addGap(484, 484, 484)
@@ -417,7 +453,10 @@ public class Principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(JPContenedorLayout.createSequentialGroup()
-                        .addGap(0, 12, Short.MAX_VALUE)
+                        .addComponent(JPbotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(488, 488, 488))
+                    .addGroup(JPContenedorLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -425,27 +464,27 @@ public class Principal extends javax.swing.JFrame {
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(JPtexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(JPDatos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(JPbotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(JPTokens, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(JPErrores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(JPEstadisticas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9))
+                            .addComponent(JPDatos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(JPErrores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(JPEstadisticas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(JPTokens, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(31, Short.MAX_VALUE))))
             .addGroup(JPContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(JPContenedorLayout.createSequentialGroup()
                     .addGap(96, 96, 96)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(823, Short.MAX_VALUE)))
+                    .addContainerGap(832, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(JPContenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(JPContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -557,6 +596,48 @@ public class Principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void JBASTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JBASTActionPerformed
+        try {
+    
+    if (raizAST == null) {
+        JOptionPane.showMessageDialog( this,"Primero debes analizar un archivo .pz.", "AST no disponible",JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    AST generador = new AST();
+    generador.generarAST(raizAST);
+    
+    int opcion = JOptionPane.showConfirmDialog(this,"El AST se generó correctamente.\n\n"+ "¿Desea abrir la imagen del AST?","AST generado",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
+    
+    if (opcion == JOptionPane.YES_OPTION) {
+        
+        File imagen = new File("ast_promptzal.png");
+        
+        if (Desktop.isDesktopSupported()
+                && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+            
+            Desktop.getDesktop().open(imagen);
+            
+        } else {
+            
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se puede abrir automáticamente la imagen.",
+                    "Abrir AST",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    
+    } catch (IOException e) {
+    
+    JOptionPane.showMessageDialog(
+            this,
+            "No se pudo generar el AST.\n\n" + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_JBASTActionPerformed
+
     //Métodos para los botones
     private void guardarArchivo() {
 
@@ -608,12 +689,13 @@ public class Principal extends javax.swing.JFrame {
     }
 
     try {
-        // 1. Limpiar los resultados del análisis anterior.
+        //Limpiar los resultados del análisis anterior.
         tokens.clear();
         errores.clear();
         erroresSintacticos.clear();
+        erroresSemanticos.clear();
 
-        // 2. Ejecutar el analizador léxico de JFlex.
+        //Ejecutar el analizador léxico de JFlex.
         AnalizadorLexico lexer =
                 new AnalizadorLexico(new StringReader(contenido));
 
@@ -627,35 +709,26 @@ public class Principal extends javax.swing.JFrame {
             tokens.add(token);
         }
 
-        // 3. Recuperar los errores léxicos.
+        //Recuperar los errores léxicos.
         errores.addAll(lexer.getErrores());
 
-        // 4. Actualizar las tablas y estadísticas de la interfaz.
+        // Actualizar las tablas y estadísticas de la interfaz.
         mostrarTokens();
         mostrarErrores();
         mostrarEstadisticas();
         mostrarResumen();
-
+        mostrarSimbolos();
+        
         System.out.println("ANÁLISIS LÉXICO TERMINADO");
         System.out.println("Tokens encontrados: " + tokens.size());
         System.out.println("Errores léxicos encontrados: " + errores.size());
 
-        // 5. Si hay errores léxicos, no ejecutar el parser.
+        
         if (!errores.isEmpty()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Se encontraron " + errores.size()
-                    + " error(es) léxico(s).\n\n"
-                    + "Revisa la tabla de errores antes de continuar "
-                    + "con el análisis sintáctico.",
-                    "Errores léxicos",
-                    JOptionPane.WARNING_MESSAGE
-            );
-
             return;
         }
 
-        // 6. Ejecutar el analizador sintáctico.
+        //Ejecutar el analizador sintáctico.
         AnalizadorSintactico parser =
                 new AnalizadorSintactico(tokens);
 
@@ -665,20 +738,40 @@ public class Principal extends javax.swing.JFrame {
         erroresSintacticos.addAll(parser.getDetallesErrores());
 
         mostrarErrores();
-        // 7. Mostrar el resultado del análisis sintáctico.
+        //Mostrar el resultado del análisis sintáctico.
+                
         if (sintaxisCorrecta) {
+    System.out.println("ANÁLISIS SINTÁCTICO CORRECTO");
 
-            System.out.println("ANÁLISIS SINTÁCTICO CORRECTO");
+    raizAST = parser.getRaizAST();
+    
+        // Ejecutar el análisis semántico.
+    if (raizAST != null) {
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "El análisis léxico terminó correctamente.\n"
-                    + "El programa cumple la gramática de PromptZal.",
-                    "Análisis correcto",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+        AnalizadorSemantico semantico = new AnalizadorSemantico();
 
-        } else {
+        semantico.analizar(raizAST);
+
+        erroresSemanticos.clear();
+        erroresSemanticos.addAll(semantico.getErrores());
+
+        mostrarErrores();
+
+        System.out.println(semantico.imprimirErrores());
+    }
+
+    if (raizAST != null) {
+        System.out.println("ÁRBOL SINTÁCTICO");
+        System.out.println(raizAST.imprimirArbol());
+
+        TablaSimbolos tablaSimbolos = new TablaSimbolos();
+        tablaSimbolos.construirDesdeAST(raizAST);
+
+        System.out.println(tablaSimbolos.imprimirTabla());
+    }
+
+    
+    } else {
 
             System.out.println("ERRORES SINTÁCTICOS:");
 
@@ -695,12 +788,7 @@ public class Principal extends javax.swing.JFrame {
                        .append("\n\n");
             }
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    mensaje.toString(),
-                    "Errores sintácticos",
-                    JOptionPane.WARNING_MESSAGE
-            );
+            
         }
 
     } catch (IOException ex) {
@@ -713,6 +801,13 @@ public class Principal extends javax.swing.JFrame {
                 JOptionPane.ERROR_MESSAGE
         );
     }
+    
+    JOptionPane.showMessageDialog(
+        this,
+        "Análisis completo",
+        "Resultado",
+        JOptionPane.INFORMATION_MESSAGE
+);
 }
     
     private void mostrarTokens() {
@@ -736,13 +831,11 @@ public class Principal extends javax.swing.JFrame {
     
     private void mostrarErrores() {
 
-    DefaultTableModel modelo =
-            (DefaultTableModel) tablaErrores.getModel();
+    DefaultTableModel modelo = (DefaultTableModel) tablaErrores.getModel();
 
-    // Limpiar los resultados anteriores.
     modelo.setRowCount(0);
 
-    // Mostrar los errores léxicos.
+    // Errores léxicos.
     for (ErrorL error : errores) {
 
         modelo.addRow(new Object[]{
@@ -753,7 +846,7 @@ public class Principal extends javax.swing.JFrame {
         });
     }
 
-    // Mostrar los errores sintácticos.
+    // Errores sintácticos.
     for (ErrorSintactico error : erroresSintacticos) {
 
         modelo.addRow(new Object[]{
@@ -762,8 +855,38 @@ public class Principal extends javax.swing.JFrame {
             error.getFila(),
             error.getColumna()
         });
-        }
     }
+
+    // Errores semánticos.
+    
+for (String error : erroresSemanticos) {
+
+    String descripcion = error.replaceFirst(
+            "^Error semántico en línea \\d+, columna \\d+:\\s*",
+            ""
+    );
+
+    java.util.regex.Matcher coincidencia =
+            java.util.regex.Pattern.compile(
+                    "^Error semántico en línea (\\d+), columna (\\d+):"
+            ).matcher(error);
+
+    int fila = -1;
+    int columna = -1;
+
+    if (coincidencia.find()) {
+        fila = Integer.parseInt(coincidencia.group(1));
+        columna = Integer.parseInt(coincidencia.group(2));
+    }
+
+    modelo.addRow(new Object[]{
+        "-",
+        "SEMÁNTICO: " + descripcion,
+        fila == -1 ? "-" : fila,
+        columna == -1 ? "-" : columna
+    });
+}
+}
     private void mostrarEstadisticas() {
 
     DefaultTableModel modelo =
@@ -913,7 +1036,7 @@ public class Principal extends javax.swing.JFrame {
         tabla.setBackground(fondo);
         tabla.setForeground(texto);
 
-        // Área vacía del JScrollPane
+        
         scroll.setBackground(fondo);
         scroll.getViewport().setBackground(fondo);
 
@@ -980,9 +1103,40 @@ public class Principal extends javax.swing.JFrame {
         }
     }
     
+    private void mostrarSimbolos() {
+
+    DefaultTableModel modelo =
+            (DefaultTableModel) Simbolos.getModel();
+
+    modelo.setRowCount(0);
+
+    java.util.Map<String, Integer> simbolos =
+            new java.util.LinkedHashMap<>();
+
+    for (Token token : tokens) {
+
+        String tipo = token.getTipo().toString();
+
+        simbolos.put(
+                tipo,
+                simbolos.getOrDefault(tipo, 0) + 1
+        );
+    }
+
+    for (java.util.Map.Entry<String, Integer> simbolo
+            : simbolos.entrySet()) {
+
+        modelo.addRow(new Object[]{
+            simbolo.getKey(),
+            simbolo.getValue()
+        });
+    }
+} 
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton JBAST;
     private javax.swing.JButton JBtnReportes;
     private javax.swing.JLabel JLTotalErrores;
     private javax.swing.JLabel JLTotalLineas;
@@ -995,12 +1149,14 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel JPTokens;
     private javax.swing.JPanel JPbotones;
     private javax.swing.JPanel JPtexto;
+    private javax.swing.JTable Simbolos;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1012,6 +1168,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTable tablaErrores;
     private javax.swing.JTable tablaEstadisticas;

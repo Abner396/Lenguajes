@@ -212,7 +212,15 @@ public class Analizador {
 
         lexema += lector.getCaracter_actual();
         lector.avanzar();
-        Token token = new Token( numero_token, lexema, Tipo.ASIGNACION, fila_inicial, columna_inicial);
+        Tipo tipo = lexema.equals("=") ? Tipo.IGUAL : Tipo.OPERADOR;
+
+        Token token = new Token(
+        numero_token,
+        lexema,
+        tipo,
+        fila_inicial,
+        columna_inicial
+        );
         tokens.add(token);
 
         numero_token++;
@@ -257,7 +265,13 @@ public class Analizador {
 
             lexema += lector.getCaracter_actual();
             lector.avanzar();
-            Token token = new Token( numero_token, lexema, Tipo.CONECTOR, fila_inicial, columna_inicial);
+            Token token = new Token(
+        numero_token,
+        lexema,
+        Tipo.FLECHA,
+        fila_inicial,
+        columna_inicial
+);
             tokens.add(token);
 
             numero_token++;
@@ -392,25 +406,61 @@ public class Analizador {
     }
 }
 
-  private void reconocerDelimitador() throws IOException {
+      private void reconocerDelimitador() throws IOException {
 
-        int fila_inicial = lector.getFila();
-        int columna_inicial = lector.getColumna();
+    int fila_inicial = lector.getFila();
+    int columna_inicial = lector.getColumna();
 
-        String lexema = "";
+    char caracter = lector.getCaracter_actual();
+    String lexema = String.valueOf(caracter);
 
-        lexema += lector.getCaracter_actual();
+    Tipo tipo;
 
-        lector.avanzar();
+    switch (caracter) {
+        case '{':
+            tipo = Tipo.LLAVE_ABRIR;
+            break;
 
-        Token token = new Token( numero_token, lexema, Tipo.DELIMITADOR, fila_inicial, columna_inicial);
+        case '}':
+            tipo = Tipo.LLAVE_CERRAR;
+            break;
 
-        tokens.add(token);
+        case '(':
+            tipo = Tipo.PARENTESIS_ABRIR;
+            break;
 
-        numero_token++;
+        case ')':
+            tipo = Tipo.PARENTESIS_CERRAR;
+            break;
 
-        System.out.println(token);
+        case ',':
+            tipo = Tipo.COMA;
+            break;
+
+        case ';':
+            tipo = Tipo.DELIMITADOR;
+            break;
+
+        default:
+            tipo = Tipo.DELIMITADOR;
+            break;
     }
+
+    lector.avanzar();
+
+    Token token = new Token(
+            numero_token,
+            lexema,
+            tipo,
+            fila_inicial,
+            columna_inicial
+    );
+
+    tokens.add(token);
+    numero_token++;
+
+    System.out.println(token);
+}
 
      private void reconocerErrorCaracter() throws IOException {
 
@@ -430,51 +480,53 @@ public class Analizador {
         System.out.println(error);
     }
 
-     private Tipo determinarTipo(String lexema) {
+    private Tipo determinarTipo(String lexema) {
 
-        switch (lexema) {
+    switch (lexema) {
 
-            
-            case "AGENTE":
-            case "contexto":
-            case "variable":
-            case "EJECUTAR":
-            case "EXPORTAR":
+        // Elementos de la estructura del programa
+        case "AGENTE":
+            return Tipo.AGENTE;
 
-                return Tipo.PALABRA_RESERVADA;
+        case "contexto":
+            return Tipo.CONTEXTO;
 
-            
-            case "PREGUNTAR":
-            case "GENERAR":
-            case "RESUMIR":
-            case "ANALIZAR":
-            case "TRADUCIR":
-            case "CLASIFICAR":
-            case "EXTRAER":
-            case "CODIFICAR":
+        case "variable":
+            return Tipo.VARIABLE;
 
-                return Tipo.COMANDO_IA;
+        case "EJECUTAR":
+            return Tipo.EJECUTAR;
 
-           
-            case "SOBRE":
-            case "DESDE":
-            case "EN":
-            case "COMO":
-            
+        case "EXPORTAR":
+            return Tipo.EXPORTAR;
 
-                return Tipo.CONECTOR;
+        // Comandos de inteligencia artificial
+        case "PREGUNTAR":
+        case "GENERAR":
+        case "RESUMIR":
+        case "ANALIZAR":
+        case "TRADUCIR":
+        case "CLASIFICAR":
+        case "EXTRAER":
+        case "CODIFICAR":
+            return Tipo.COMANDO_IA;
 
-            case "CARGAR":
+        // Conectores del lenguaje
+        case "SOBRE":
+        case "DESDE":
+        case "EN":
+        case "COMO":
+            return Tipo.CONECTOR;
 
-                return Tipo.FUNCION;
+        // Funciones
+        case "CARGAR":
+            return Tipo.CARGAR;
 
-            
-            default:
-
-                return Tipo.IDENTIFICADOR;
-        }
+        // Identificadores
+        default:
+            return Tipo.ID;
     }
-
+}
      public boolean esLetra(char caracter) {
 
         return (caracter >= 'A' && caracter <= 'Z') || (caracter >= 'a' && caracter <= 'z');
